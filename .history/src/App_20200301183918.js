@@ -1,12 +1,11 @@
 import React from 'react';
-import AppLayoutWithHeader from './mainAppWrapperComponent/AppLayoutWithHeader';
-
+import logo from './logo.svg';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <AppLayoutWithHeader/>
+      
     </div>
   );
 }
