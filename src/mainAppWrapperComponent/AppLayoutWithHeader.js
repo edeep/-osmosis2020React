@@ -10,8 +10,8 @@ export default class AppLayoutWithHeader extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isAuthorized: false,
-            userRole:'NA'
+            isAuthorized: true,
+            userRole:'manu'
         }
 
     }
