@@ -114,7 +114,7 @@ export default class CreateSubscription extends React.Component {
                                 <FormControlLabel
                                     control={<Checkbox color='primary' onChange={this.handleChangeCheckBox}
                                         value={eachServiceData.serviceId} checked={this.checkIfChecked(eachServiceData.serviceId)} />}
-                                    label={eachServiceData.serviceName }
+                                    label={eachServiceData.servicename }
                                 />
 
                             </div>

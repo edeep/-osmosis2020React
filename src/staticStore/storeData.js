@@ -31,32 +31,32 @@ export const subscriptions = [
 export const services = [
     {
         serviceId: 1,
-        serviceName: 'Safety connect',
-        serviceDesc: 'Connecting all your safety',
+        servicename: 'Safety connect',
+        servicedec: 'Connecting all your safety',
         servicePrice: '$500',
     },
     {
         serviceId: 2,
-        serviceName: 'Service connect',
-        serviceDesc: 'Connecting all your services',
+        servicename: 'Service connect',
+        servicedec: 'Connecting all your services',
         servicePrice: '$200',
     },
     {
         serviceId: 3,
-        serviceName: 'Remote connect',
-        serviceDesc: 'Connecting all your remotes',
+        servicename: 'Remote connect',
+        servicedec: 'Connecting all your remotes',
         servicePrice: '$100',
     },
     {
         serviceId: 4,
-        serviceName: 'Navigation connect',
-        serviceDesc: 'Connecting all your navigation',
+        servicename: 'Navigation connect',
+        servicedec: 'Connecting all your navigation',
         servicePrice: '$400',
     },
     {
         serviceId: 5,
-        serviceName: 'Destination Assist connect',
-        serviceDesc: 'Connecting all your destinations',
+        servicename: 'Destination Assist connect',
+        servicedec: 'Connecting all your destinations',
         servicePrice: '$100',
     }
 ]
@@ -86,6 +86,83 @@ export const vehicles = [
     {
         vehicleId: 5,
         vehicleName: 'Honda Jazz',
+
+    }
+];
+
+
+export const custSubscriptions = [
+    {
+        subscriptionId: 1,
+        subscriptionName: 'Jan 2020 S',
+        subscriptionDesc: 'Jan 2020 Sedan',
+        subscriptionPrice: '$2500',
+        vin:'',
+        subscriptionStartDate: 'Jan-05-2020',
+        subscriptionEndDate: 'Jan-07-2021'
+    },
+    {
+        subscriptionId: 2,
+        subscriptionName: 'Dec2019 H',
+        subscriptionDesc: 'Dec 2019 Hatchback',
+        subscriptionPrice: '$7200',
+        subscriptionStartDate: 'Dec-05-2019',
+        subscriptionEndDate: 'Dec-07-2020',
+        vin: ''
+    },
+    {
+        subscriptionId: 3,
+        subscriptionName: 'Jan 2020H',
+        subscriptionDesc: 'Dec 2019 Hatchback',
+        subscriptionPrice: '$6100',
+        subscriptionStartDate: 'Jan-01-2020',
+        subscriptionEndDate: 'Jan-07-2022',
+        vin: ''
+    }
+];
+
+export const custmoerVehicles = [
+    {
+        vehicleId: 1,
+        vin:10000000000000001,
+       
+        maker: 'Volkswagon',
+        model: 'Polo',
+        year:'2010'
+
+    },
+    {
+        vehicleId: 2,
+        vin: 10000000000000002,
+       
+        maker: 'Toyota',
+        model:'Camry',
+        year: '2020'
+
+    },
+    {
+        vehicleId: 3,
+        vin: 10000000000000003,
+       
+        maker: 'Toyota',
+        year: '2018',
+        model: 'Corollo',
+
+    },
+    {
+        vehicleId: 4,
+        vin: 10000000000000004,
+        maker: 'Honda',
+        year: '2011',
+        model:'City'
+
+    },
+    {
+        vehicleId: 5,
+        vin: 10000000000000005,
+        maker: 'Honda',
+        year: '2011',
+        model: 'Civic'
 
     }
 ];

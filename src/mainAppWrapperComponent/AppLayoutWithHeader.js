@@ -11,7 +11,7 @@ export default class AppLayoutWithHeader extends React.Component {
         super(props);
         this.state = {
             isAuthorized: true,
-            userRole:'cust'
+            userRole:'manu'
         }
 
     }

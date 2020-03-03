@@ -17,6 +17,28 @@ export default class CreateServices extends React.Component {
     }
 
     addNewService = (data) => {
+
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        };
+
+        let url = "http://localhost:7081/owner-site/manufacturer/addNewService";
+        fetch(url, options)
+            .then(response => {
+                if (!response.ok) { throw response }
+                return response.json()  //we only get here if there is no error
+            })
+            .then(json => {
+                this.getAllServices();
+            })
+            .catch(err => {
+                
+                console.log('REST ERROR');
+            })
         
     }
 
@@ -26,6 +48,27 @@ export default class CreateServices extends React.Component {
 
     deleteService = (data) => {
 
+    }
+
+    getAllServices = () => {
+        let url = "http://localhost:7081/owner-site/manufacturer/getAllServices";
+        fetch(url)
+            .then(response => {
+                if (!response.ok) { throw response }
+                return response.json()  //we only get here if there is no error
+            })
+            .then(json => {
+                console.log('Json >>', json);
+                this.setState({ servicesData: json});
+            })
+            .catch(err => {
+
+                console.log('REST ERROR');
+            })
+    }
+
+    componentDidMount() {
+        this.getAllServices();
     }
 
     render() {
@@ -40,9 +83,9 @@ export default class CreateServices extends React.Component {
                         }}
                title="Services List"
                     columns={[
-                        { title: 'Service Name', field: 'serviceName' },
-                        { title: 'Service Desc', field: 'serviceDesc' },
-                        { title: 'Price', field: 'servicePrice' },
+                        { title: 'Service Name', field: 'servicename' },
+                        { title: 'Service Desc', field: 'servicedec' }
+                      
 
 
                     ]}
