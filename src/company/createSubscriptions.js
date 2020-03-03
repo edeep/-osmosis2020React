@@ -17,8 +17,9 @@ export default class CreateSubscription extends React.Component {
         super(props);
         this.state = {
             value: 0,
-            expanded: 'panel2',
+            expanded: 'panel1',
             setExpanded: false,
+            selectedSubDetail: {},
             subscriptionData: [
                 {
                     subscriptionId: 1,
@@ -185,9 +186,7 @@ export default class CreateSubscription extends React.Component {
     displayServices = (servicesData) => {
         return (
             <FormControl component="fieldset" >
-                <Button variant="contained" color="primary" onClick={this.updateServicesForSub}>
-                  Update Services
-                </Button>
+               
                 <FormGroup>
                     {servicesData.map((eachServiceData, index) => {
                         return (
@@ -210,9 +209,7 @@ export default class CreateSubscription extends React.Component {
     displayVehicles = (vehicleData) => {
         return (
             <FormControl component="fieldset" >
-                <Button variant="contained" color="primary" onClick={this.updateVehiclesForSub}>
-                    Update Vehicles
-                </Button>
+                
                 <FormGroup>
                     {vehicleData.map((eachvehicleData, index) => {
                         return (
@@ -231,6 +228,21 @@ export default class CreateSubscription extends React.Component {
             </FormControl>
         );
     }
+
+    displayDetailButton = (param) => {
+        console.log(param);
+        return (
+            <Button variant="contained" data-sub={param} color="primary"
+                onClick={() => {
+                    console.log('onClick id is ', param.subscriptionId);
+                    this.setState({ expanded:'panel2', selectedSubDetail:param})
+                }}>
+            Detail
+                            </Button>);
+        
+    }
+
+   
     render() {
         return (
             <div >
@@ -254,6 +266,7 @@ export default class CreateSubscription extends React.Component {
                                 { title: 'Subscription Start', field: 'subscriptionStartDate', type: 'date' },
                                 { title: 'Subscription End', field: 'subscriptionEndDate', type: 'date' },
                                 { title: 'Price', field: 'subscriptionPrice' },
+                                { title: 'Detail', field: 'subscriptionId', render: this.displayDetailButton },
 
 
                             ]}
@@ -303,21 +316,31 @@ export default class CreateSubscription extends React.Component {
                         <Typography >Subscriptions Details</Typography>
                         
                     </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
+                    <ExpansionPanelDetails style={{display:'block'}}>
                         <div>
-                            <div>Service Name: To be added</div>
-                            <div>Service Desc: To be added</div>
+                            <div><b>Service Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
+                            <div><b>Service Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
                         </div>
                      
-                            <div>
-                            <div><h5>Services Attached </h5></div>
-                                <div>{this.displayServices(this.state.servicesData)}</div>
+                        <div style={{ display: 'flex' }}>
+                            <div style={{ width: '50%' }}>
+                                <div><h5>Services Attached </h5></div>
+                                <Button variant="contained" color="primary" onClick={this.updateServicesForSub}>
+                         Update Services
+                            </Button>
+                                
+                                <div style={{ height: '200px', overflowY: 'scroll' }}>
+                                    {this.displayServices(this.state.servicesData)}
+                                </div>
                             </div>
-                            <div >
-                            <div><h5>Vehicles Attached</h5></div>
-                                 <div>{this.displayVehicles(this.state.vehicleData)}</div>
+                            <div style={{ width: '50%' }}>
+                                <div><h5>Vehicles Attached</h5></div>
+                                <Button variant="contained" color="primary" onClick={this.updateVehiclesForSub}>
+                                    Update Vehicles
+                                </Button>
+                                <div style={{ height: '200px', overflowY: 'scroll' }}>{this.displayVehicles(this.state.vehicleData)}</div>
                             </div>
-                     
+                        </div>
                           
                     
                     </ExpansionPanelDetails>
