@@ -2,6 +2,9 @@ import React from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
+import CreateService from './createServices';
+import CreateSubscription from './createSubscriptions';
+import AnalyticsMain from './analyticsMain';
 
 export default class CompanyLandingPage extends React.Component{
 
@@ -9,6 +12,25 @@ export default class CompanyLandingPage extends React.Component{
         super(props);
         this.state = {
             value: 0
+        }
+    }
+
+    handleChange = (event, newValue) => {
+        console.log('event', event);
+        console.log('newValue', newValue);
+        this.setState({ value: newValue });
+    };
+
+    displaySelectedTab = (param) => {
+        switch (param) {
+            case 0:
+                return <AnalyticsMain/>
+            case 1:
+                return <CreateService />
+            case 2:
+                return <CreateSubscription />
+            default:
+                return <AnalyticsMain  />
         }
     }
 
@@ -27,10 +49,13 @@ export default class CompanyLandingPage extends React.Component{
                         label='Analytics'
 
                     />
-                    <Tab label="RDR "
+                    <Tab label="Create Services"
 
                     />
                     <Tab label="Create Subscriptions"
+
+                    />
+                    <Tab label="RDR "
 
                     />
                   
@@ -43,6 +68,7 @@ export default class CompanyLandingPage extends React.Component{
                     />
                 </Tabs>
             </Paper>
+            {this.displaySelectedTab(this.state.value)}
         </div>);
     }
 }
