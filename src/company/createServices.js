@@ -4,6 +4,7 @@ import AddBox from '@material-ui/icons/AddBox';
 import Edit from '@material-ui/icons/Edit';
 import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import { forwardRef } from 'react';
+import {  services} from '../staticStore/storeData';
 
 export default class CreateServices extends React.Component {
 
@@ -11,38 +12,7 @@ export default class CreateServices extends React.Component {
         super(props);
         this.state = {
             value: 0,
-            servicesData: [
-                {
-                    serviceId:1,
-                    serviceName: 'Safety connect',
-                    serviceDesc:'Connecting all your safety',
-                    servicePrice: '$500',
-                },
-                {
-                    serviceId: 2,
-                    serviceName: 'Service connect',
-                    serviceDesc: 'Connecting all your services',
-                    servicePrice: '$200',
-                },
-                {
-                    serviceId: 3,
-                    serviceName: 'Remote connect',
-                    serviceDesc: 'Connecting all your remotes',
-                    servicePrice: '$100',
-                },
-                {
-                    serviceId: 4,
-                    serviceName: 'Navigation connect',
-                    serviceDesc: 'Connecting all your navigation',
-                    servicePrice: '$400',
-                },
-                {
-                    serviceId: 5,
-                    serviceName: 'Destination Assist connect',
-                    serviceDesc: 'Connecting all your destinations',
-                    servicePrice: '$100',
-                }
-            ]
+            servicesData: services
         }
     }
 

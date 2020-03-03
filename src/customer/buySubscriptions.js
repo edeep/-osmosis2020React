@@ -5,15 +5,12 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MaterialTable from 'material-table';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import PaymentForm from '../sharedComponents/paymentForm';
 
 import { subscriptions, services, vehicles } from '../staticStore/storeData';
 
-export default class CreateSubscription extends React.Component {
+export default class BuySubscriptions extends React.Component {
 
     constructor(props) {
         super(props);
@@ -26,12 +23,12 @@ export default class CreateSubscription extends React.Component {
             servicesData: services,
             serviceIdsOfSelectedSub: [1, 2],
             vehicleData: vehicles,
-            vehicleIdsOfSelectedSub: [2,3],
+            vehicleIdsOfSelectedSub: [2, 3],
         }
     }
 
     handleChange = panel => (event, isExpanded) => {
-      
+
         let value = isExpanded ? panel : false;
         this.setState({ expanded: value });
     };
@@ -86,7 +83,7 @@ export default class CreateSubscription extends React.Component {
 
 
     checkIfChecked = (serviceId) => {
-        
+
         if (this.state.serviceIdsOfSelectedSub.indexOf(serviceId) > -1) {
             return true;
         } else {
@@ -105,47 +102,32 @@ export default class CreateSubscription extends React.Component {
 
     displayServices = (servicesData) => {
         return (
-            <FormControl component="fieldset" >
-               
-                <FormGroup>
-                    {servicesData.map((eachServiceData, index) => {
+                    servicesData.map((eachServiceData, index) => {
                         return (
                             <div key={index} >
-                                <FormControlLabel
-                                    control={<Checkbox color='primary' onChange={this.handleChangeCheckBox}
-                                        value={eachServiceData.serviceId} checked={this.checkIfChecked(eachServiceData.serviceId)} />}
-                                    label={eachServiceData.serviceName }
-                                />
+                                {eachServiceData.serviceName}
+                                
 
                             </div>
                         );
-                    })}
-                </FormGroup>
-
-            </FormControl>
+                    })
+                
         );
     }
 
     displayVehicles = (vehicleData) => {
         return (
-            <FormControl component="fieldset" >
-                
-                <FormGroup>
-                    {vehicleData.map((eachvehicleData, index) => {
+  
+                    vehicleData.map((eachvehicleData, index) => {
                         return (
                             <div key={index} >
-                                <FormControlLabel
-                                    control={<Checkbox color='primary' onChange={this.handleChangeCheckBoxVehicle}
-                                        value={eachvehicleData.vehicleId} checked={this.checkIfCheckedVehicle(eachvehicleData.vehicleId)} />}
-                                    label={eachvehicleData.vehicleName}
-                                />
+                                {eachvehicleData.vehicleName}
+                                
 
                             </div>
                         );
-                    })}
-                </FormGroup>
-
-            </FormControl>
+                    })
+               
         );
     }
 
@@ -155,14 +137,14 @@ export default class CreateSubscription extends React.Component {
             <Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
-                    this.setState({ expanded:'panel2', selectedSubDetail:param})
+                    this.setState({ expanded: 'panel2', selectedSubDetail: param })
                 }}>
-            Detail
+                Buy/Detail
                             </Button>);
-        
+
     }
 
-   
+
     render() {
         return (
             <div >
@@ -173,13 +155,13 @@ export default class CreateSubscription extends React.Component {
                         aria-controls="panel1bh-content"
                         id="panel1bh-header"
                     >
-                        <Typography>Subscriptions Summary</Typography>
-                       
+                        <Typography>Subscriptions </Typography>
+
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
                         <MaterialTable
-                            style={{width:'100%'}}
-                            title="Subscription List"
+                            style={{ width: '100%' }}
+                            title=" Available Subscriptions"
                             columns={[
                                 { title: 'Subscription Name', field: 'subscriptionName' },
                                 { title: 'Subscription Desc', field: 'subscriptionDesc' },
@@ -199,30 +181,7 @@ export default class CreateSubscription extends React.Component {
                                     color: 'white'
                                 }
                             }}
-                            editable={{
-                                onRowAdd: newData =>
-                                    new Promise((resolve, reject) => {
-                                        setTimeout(() => {
-
-                                            this.addNewService(newData);
-                                            resolve()
-                                        }, 1000)
-                                    }),
-                                onRowUpdate: (newData, oldData) =>
-                                    new Promise((resolve, reject) => {
-                                        setTimeout(() => {
-                                            this.updateService(newData);
-                                            resolve()
-                                        }, 1000)
-                                    }),
-                                onRowDelete: oldData =>
-                                    new Promise((resolve, reject) => {
-                                        setTimeout(() => {
-                                            this.deleteService(oldData.serviceId);
-                                            resolve()
-                                        }, 1000)
-                                    })
-                            }}
+                       
                         />
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
@@ -234,39 +193,40 @@ export default class CreateSubscription extends React.Component {
                         id="panel2bh-header"
                     >
                         <Typography >Subscriptions Details</Typography>
-                        
+
                     </ExpansionPanelSummary>
-                    <ExpansionPanelDetails style={{display:'block'}}>
-                        <div>
-                            <div><b>Service Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
-                            <div><b>Service Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
+                    <ExpansionPanelDetails style={{ display: 'flex' }}>
+                        <div style={{ padding: '10px' }}>
+                            <PaymentForm />
                         </div>
-                     
+                        
                         <div style={{ display: 'flex' }}>
-                            <div style={{ width: '50%' }}>
-                                <div><h5>Services Attached </h5></div>
-                                <Button variant="contained" color="primary" onClick={this.updateServicesForSub}>
-                         Update Services
-                            </Button>
-                                
+                            <div style={{ padding: '10px' }}>
+                                <div><h5>Service Name:</h5> {this.state.selectedSubDetail.subscriptionName}</div>
+                                <div><h5>Service Desc:</h5> {this.state.selectedSubDetail.subscriptionDesc}</div>
+                            </div>
+
+                            <div style={{ padding: '10px' }}>
+                                <div><h5>Services Eligible </h5></div>
+                          
+
                                 <div style={{ height: '200px', overflowY: 'scroll' }}>
                                     {this.displayServices(this.state.servicesData)}
                                 </div>
                             </div>
-                            <div style={{ width: '50%' }}>
-                                <div><h5>Vehicles Attached</h5></div>
-                                <Button variant="contained" color="primary" onClick={this.updateVehiclesForSub}>
-                                    Update Vehicles
-                                </Button>
+                            <div style={{ padding: '10px' }}>
+                                <div><h5>Vehicles Eligible</h5></div>
+                               
                                 <div style={{ height: '200px', overflowY: 'scroll' }}>{this.displayVehicles(this.state.vehicleData)}</div>
                             </div>
                         </div>
-                          
-                    
+                      
+
+
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
-            
-                   
+
+
             </div>
         );
     }

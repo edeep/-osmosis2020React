@@ -12,6 +12,7 @@
     "highcharts-react-official": "^3.0.0",
     "material-table": "^1.57.2",
     "react": "^16.13.0",
+    "react-credit-cards": "^0.8.0",
     "react-dom": "^16.13.0",
     "react-google-login": "^5.1.1",
     "react-scripts": "3.4.0"
