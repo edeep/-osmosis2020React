@@ -1,4 +1,6 @@
 import React from 'react';
+import Highcharts from 'highcharts'
+import HighchartsReact from 'highcharts-react-official'
 
 export default class AnalyticsMain extends React.Component {
 
@@ -9,10 +11,24 @@ export default class AnalyticsMain extends React.Component {
         }
     }
 
+    options = {
+        title: {
+            text: 'Testing chart....'
+        },
+        series: [{
+            data: [1, 2, 3]
+        }]
+    }
+
     render() {
         return (
             <div>
-                Analytics Page
+             
+                 <HighchartsReact
+                    highcharts={Highcharts}
+                    options={this.options}
+                />
+
             </div>);
     }
 }
