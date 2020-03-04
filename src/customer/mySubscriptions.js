@@ -28,6 +28,18 @@ export default class MySubscriptions extends React.Component {
         this.setState({ expanded: value });
     };
 
+    displayDetailButton = (param) => {
+        console.log(param);
+        return (
+            <Button variant="contained" data-sub={param} color="primary"
+                onClick={() => {
+                    console.log('onClick id is ', param.subscriptionId);
+                    //this.setState({ expanded: 'panel2', selectedSubDetail: param })
+                }}>
+                Detail
+                            </Button>);
+
+    }
     
     displayTransferButton = (param) => {
         console.log(param);
@@ -66,6 +78,16 @@ export default class MySubscriptions extends React.Component {
 
     }
 
+    displayStatus = (param) => {
+        console.log(param);
+        return (
+           <div>
+                Status
+            </div>
+                          );
+
+    }
+
 
     render() {
         return (
@@ -91,6 +113,8 @@ export default class MySubscriptions extends React.Component {
                                 { title: 'Subscription Start', field: 'subscriptionStartDate', type: 'date' },
                                 { title: 'Subscription End', field: 'subscriptionEndDate', type: 'date' },
                                 { title: 'Price', field: 'subscriptionPrice' },
+                                { title: 'Status', field: 'subscriptionId', render: this.displayStatus },
+                                { title: 'Detail', field: 'subscriptionId', render: this.displayDetailButton },
                                 { title: 'Transfer', field: 'subscriptionId', render: this.displayTransferButton },
                                 { title: 'Cancel', field: 'subscriptionId', render: this.displayCancelButton },
                                 { title: 'Refund', field: 'subscriptionId', render: this.displayRefundButton },

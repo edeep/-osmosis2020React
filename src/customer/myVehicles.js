@@ -171,7 +171,8 @@ export default class MyVehicles extends React.Component {
                                 { title: 'Maker', field: 'maker' },
                                 { title: 'Model', field: 'model' },
                                 { title: 'Year', field: 'year'},
-                                { title: 'VIN', field: 'vin'}
+                                { title: 'VIN', field: 'vin' },
+                                { title: 'Registered No', field: 'registationNo'}
 
 
                             ]}

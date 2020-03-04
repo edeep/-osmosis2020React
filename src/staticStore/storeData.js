@@ -125,7 +125,7 @@ export const custmoerVehicles = [
     {
         vehicleId: 1,
         vin:10000000000000001,
-       
+        registationNo:'TN 07 BL 1234',    
         maker: 'Volkswagon',
         model: 'Polo',
         year:'2010'
@@ -134,7 +134,8 @@ export const custmoerVehicles = [
     {
         vehicleId: 2,
         vin: 10000000000000002,
-       
+        registationNo: 'BA 07 BL 4534',
+      
         maker: 'Toyota',
         model:'Camry',
         year: '2020'
@@ -143,7 +144,7 @@ export const custmoerVehicles = [
     {
         vehicleId: 3,
         vin: 10000000000000003,
-       
+        registationNo: 'PO 09 AL 1113',
         maker: 'Toyota',
         year: '2018',
         model: 'Corollo',
@@ -152,6 +153,7 @@ export const custmoerVehicles = [
     {
         vehicleId: 4,
         vin: 10000000000000004,
+        registationNo: 'FL 07 XL 2238',
         maker: 'Honda',
         year: '2011',
         model:'City'
@@ -160,6 +162,7 @@ export const custmoerVehicles = [
     {
         vehicleId: 5,
         vin: 10000000000000005,
+        registationNo: 'PG 09 BL 3331',
         maker: 'Honda',
         year: '2011',
         model: 'Civic'
