@@ -173,6 +173,7 @@ export const custmoerVehicles = [
 export const Custservices = [
     {
         serviceId: 1,
+        customerId:1,
         servicename: 'Safety connect',
         servicedec: 'Connecting all your safety',
         servicePrice: '$500',
@@ -187,5 +188,23 @@ export const Custservices = [
         serviceRepairsDesc: '',
         serviceRepairsCost: '',
         
+    },
+    {
+        serviceId: 2,
+        customerId: 1,
+        servicename: 'Remote connect',
+        servicedec: 'Connecting all your remote',
+        servicePrice: '$500',
+        vin: '',
+        dealerId: '',
+        serviceStationId: '',
+        serviceRequestedDate: '',
+        serviceStartedDate: '',
+        serviceCompletedDate: '',
+        serviceCustomerComplaints: '',
+        servicecomplaintAnalysis: '',
+        serviceRepairsDesc: '',
+        serviceRepairsCost: '',
+
     }
 ]

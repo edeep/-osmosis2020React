@@ -4,7 +4,8 @@ import AddBox from '@material-ui/icons/AddBox';
 import Edit from '@material-ui/icons/Edit';
 import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import { forwardRef } from 'react';
-import {  services} from '../staticStore/storeData';
+import { services } from '../staticStore/storeData';
+import { URL } from '../sharedComponents/constants';
 
 export default class CreateServices extends React.Component {
 
@@ -26,88 +27,130 @@ export default class CreateServices extends React.Component {
             body: JSON.stringify(data)
         };
 
-        let url = "https://13.231.197.79/owner-site/manufacturer/addNewService";
-        fetch(url, options)
+        let url = URL + 'manufacturer/addNewService';
+        
+        return fetch(url, options)
             .then(response => {
-                if (!response.ok) { throw response }
-                return response.json()  //we only get here if there is no error
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
             })
-            .then(json => {
-                this.getAllServices();
-            })
-            .catch(err => {
-                
-                console.log('REST ERROR');
-            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.getAllServices();
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
         
     }
 
     updateService = (data) => {
         let options = {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify(data)
         };
 
-        let url = "https://13.231.197.79/owner-site/manufacturer/updateService";
-        fetch(url, options)
+        let url = URL + 'manufacturer/updateService';
+        
+        return fetch(url, options)
             .then(response => {
-                if (!response.ok) { throw response }
-                return response.json()  //we only get here if there is no error
-            })
-            .then(json => {
-                this.getAllServices();
-            })
-            .catch(err => {
+                if (!response.ok) {
 
-                console.log('REST ERROR');
+                    throw Error(response.status);
+                }
+                return response;
             })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.getAllServices();
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
 
 
     }
 
     deleteService = (data) => {
         let options = {
-            method: 'POST',
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify(data)
         };
 
-        let url = "https://13.231.197.79/owner-site/manufacturer/deleteService";
-        fetch(url, options)
+        let url = URL + "manufacturer/deleteService";
+
+        
+        return fetch(url, options)
             .then(response => {
-                if (!response.ok) { throw response }
-                return response.json()  //we only get here if there is no error
-            })
-            .then(json => {
-                this.getAllServices();
-            })
-            .catch(err => {
+                if (!response.ok) {
 
-                console.log('REST ERROR');
+                    throw Error(response.status);
+                }
+                return response;
             })
-
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.getAllServices();
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+        
     }
 
-    getAllServices = () => {
-        let url = "https://13.231.197.79/owner-site/manufacturer/getAllServices";
-        fetch(url)
-            .then(response => {
-                if (!response.ok) { throw response }
-                return response.json()  //we only get here if there is no error
-            })
-            .then(json => {
-                console.log('Json >>', json);
-                this.setState({ servicesData: json});
-            })
-            .catch(err => {
 
-                console.log('REST ERROR');
+    
+
+    getAllServices = () => {
+
+        //http://localhost:7081/owner-site/manufacturer/getAllServices
+        let url = URL + 'manufacturer/getAllServices';
+      
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
             })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.setState({ servicesData: data });
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
     }
 
     componentDidMount() {
