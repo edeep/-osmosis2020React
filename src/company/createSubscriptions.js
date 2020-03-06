@@ -23,10 +23,10 @@ export default class CreateSubscription extends React.Component {
             setExpanded: false,
             selectedSubDetail: {},
             subscriptionData: [],
-            servicesData: services,
-            serviceIdsOfSelectedSub: [1, 2],
-            vehicleData: vehicles,
-            vehicleIdsOfSelectedSub: [2,3],
+            servicesData: [],
+            serviceIdsOfSelectedSub: [],
+            vehicleData: [],
+            vehicleIdsOfSelectedSub: [],
         }
     }
 
@@ -64,8 +64,66 @@ export default class CreateSubscription extends React.Component {
 
     }
 
+    getAllServices = () => {
+
+        //http://localhost:7081/owner-site/manufacturer/getAllServices
+        let url = URL + 'manufacturer/getAllServices';
+
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.setState({ servicesData: data });
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+    }
+
+    getAllVehicles = () => {
+
+        //http://localhost:7081/owner-site/manufacturer/getAllServices
+        let url = URL + 'manufacturer/getAllVehicles';
+
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.setState({ vehicleData: data });
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+    }
+
     componentDidMount() {
         this.getAllSubscriptions();
+        this.getAllServices();
+        this.getAllVehicles();
     }
 
     handleChangeCheckBox = event => {
@@ -202,13 +260,95 @@ export default class CreateSubscription extends React.Component {
     }
 
 
-    updateServicesForSub = (data) => {
+    updateServicesForSub = () => {
 
+        let seletedService = this.state.serviceIdsOfSelectedSub;
+        let selectedServiceCommaSeparated = '';
+        seletedService.forEach((eachServId, index) => {
+            selectedServiceCommaSeparated = selectedServiceCommaSeparated + eachServId +','
+           
+        })
+
+        selectedServiceCommaSeparated.substring(0, selectedServiceCommaSeparated.length - 1);
+
+        let data = { serviceIds: selectedServiceCommaSeparated, subscriptionId: this.state.selectedSubDetail.subscriptionId}
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        };
+
+        let url = URL + 'manufacturer/updateSubcriptionServices';
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        
+
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
     }
 
     updateVehiclesForSub = (data) => {
 
     }
+
+    getServicesForSelectedSubscription = (data) => {
+
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        };
+
+        let url = URL + 'manufacturer/getServicesBySubscription';
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        let serviceIdsOfSelectedSub = [];
+                        data.forEach((eachSub, index) => {
+                            serviceIdsOfSelectedSub.push(eachSub.serviceId);
+                        })
+                        this.setState({ serviceIdsOfSelectedSub: serviceIdsOfSelectedSub})
+                        
+                       
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+    }
+
 
 
     checkIfChecked = (serviceId) => {
@@ -222,7 +362,7 @@ export default class CreateSubscription extends React.Component {
 
     checkIfCheckedVehicle = (vehicleId) => {
 
-        if (this.state.vehicleIdsOfSelectedSub.indexOf(vehicleId) > -1) {
+        if (this.state.vehicleIdsOfSelectedSub.indexOf(parseInt(vehicleId)) > -1) {
             return true;
         } else {
             return false;
@@ -263,7 +403,7 @@ export default class CreateSubscription extends React.Component {
                                 <FormControlLabel
                                     control={<Checkbox color='primary' onChange={this.handleChangeCheckBoxVehicle}
                                         value={eachvehicleData.vehicleId} checked={this.checkIfCheckedVehicle(eachvehicleData.vehicleId)} />}
-                                    label={eachvehicleData.vehicleName}
+                                    label={eachvehicleData.make + ' ' + eachvehicleData.model + ' ' + eachvehicleData.year}
                                 />
 
                             </div>
@@ -275,12 +415,14 @@ export default class CreateSubscription extends React.Component {
         );
     }
 
+
     displayDetailButton = (param) => {
         console.log(param);
         return (
             <Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
+                    this.getServicesForSelectedSubscription(param);
                     this.setState({ expanded:'panel2', selectedSubDetail:param})
                 }}>
             Detail
@@ -363,9 +505,9 @@ export default class CreateSubscription extends React.Component {
                         
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{display:'block'}}>
-                        <div>
-                            <div><b>Service Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
-                            <div><b>Service Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
+                        <div style={{ textAlign: 'left'}}>
+                            <div><b>Subscription Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
+                            <div><b>Subscription Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
                         </div>
                      
                         <div style={{ display: 'flex' }}>
