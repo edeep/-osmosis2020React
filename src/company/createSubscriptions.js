@@ -10,7 +10,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-
+import { URL } from '../sharedComponents/constants';
 import { subscriptions, services, vehicles } from '../staticStore/storeData';
 
 export default class CreateSubscription extends React.Component {
@@ -22,7 +22,7 @@ export default class CreateSubscription extends React.Component {
             expanded: 'panel1',
             setExpanded: false,
             selectedSubDetail: {},
-            subscriptionData: subscriptions,
+            subscriptionData: [],
             servicesData: services,
             serviceIdsOfSelectedSub: [1, 2],
             vehicleData: vehicles,
@@ -35,6 +35,38 @@ export default class CreateSubscription extends React.Component {
         let value = isExpanded ? panel : false;
         this.setState({ expanded: value });
     };
+
+    getAllSubscriptions = () => {
+
+        //http://localhost:7081/owner-site/manufacturer/getAllServices
+        let url = URL + 'manufacturer/getAllSubscriptions';
+
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.setState({ subscriptionData: data });
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+    }
+
+    componentDidMount() {
+        this.getAllSubscriptions();
+    }
 
     handleChangeCheckBox = event => {
         console.log('Check box clicked', event);
@@ -64,17 +96,111 @@ export default class CreateSubscription extends React.Component {
         this.setState({ vehicleIdsOfSelectedSub: vehicleIds });
     };
 
-    addNewService = (data) => {
+    addNewSubsctiption = (data) => {
+
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        };
+
+        let url = URL + 'manufacturer/addNewSubscription';
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.getAllSubscriptions();
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
 
     }
 
-    updateService = (data) => {
+    udpateSubscription = (data) => {
+
+        let options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        };
+
+        let url = URL + 'manufacturer/updateSubscription';
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.getAllSubscriptions();
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
 
     }
 
-    deleteService = (data) => {
+    deleteSubscription = (data) => {
+
+        let options = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        };
+
+        let url = URL + 'manufacturer/deleteSubscription';
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.getAllSubscriptions();
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
 
     }
+
 
     updateServicesForSub = (data) => {
 
@@ -204,21 +330,21 @@ export default class CreateSubscription extends React.Component {
                                     new Promise((resolve, reject) => {
                                         setTimeout(() => {
 
-                                            this.addNewService(newData);
+                                            this.addNewSubsctiption(newData);
                                             resolve()
                                         }, 1000)
                                     }),
                                 onRowUpdate: (newData, oldData) =>
                                     new Promise((resolve, reject) => {
                                         setTimeout(() => {
-                                            this.updateService(newData);
+                                            this.udpateSubscription(newData);
                                             resolve()
                                         }, 1000)
                                     }),
                                 onRowDelete: oldData =>
                                     new Promise((resolve, reject) => {
                                         setTimeout(() => {
-                                            this.deleteService(oldData.serviceId);
+                                            this.deleteSubscription(oldData);
                                             resolve()
                                         }, 1000)
                                     })
