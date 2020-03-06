@@ -10,8 +10,8 @@ export default class AppLayoutWithHeader extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isAuthorized: false,
-            userRole:'NA'
+            isAuthorized: true,
+            userRole:'cust'
         }
 
     }
@@ -21,7 +21,7 @@ export default class AppLayoutWithHeader extends React.Component {
     }
 
     render() {
-
+        localStorage.setItem('customerId', 1);
         return (
             <div> 
                <Grid container style={{display:'flex'}}>

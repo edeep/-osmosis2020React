@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import MaterialTable from 'material-table';
 import { custmoerVehicles } from '../staticStore/storeData';
-
+import { URL } from '../sharedComponents/constants';
 
 export default class MyVehicles extends React.Component {
 
@@ -21,6 +21,7 @@ export default class MyVehicles extends React.Component {
             vinSearchValue: '',
             vinSearchError: false,
             vinhelperText: '',
+            vinResultData: {},
             showVinConfirmArea: false,
             phoneConfirmValue: '',
             phoneConfirmError: false,
@@ -28,10 +29,14 @@ export default class MyVehicles extends React.Component {
             emailConfirmValue: '',
             emailConfirmError: false,
             emailConfirmhelperText: '',
-            customervehiclesData: custmoerVehicles
+            customervehiclesData: []
            
            
         }
+    }
+
+    componentDidMount() {
+        this.getMyVehicles();
     }
 
     handleChange = panel => (event, isExpanded) => {
@@ -54,21 +59,133 @@ export default class MyVehicles extends React.Component {
     }
 
     
+        
+    getMyVehicles = () => {
+
+            let customerId = localStorage.getItem('customerId');
+            //http://localhost:7081/owner-site/customer/getMyVehicles?customerId=1
+
+            let url = URL + 'customer/getMyVehicles?customerId='+customerId;
+
+            return fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+
+                        throw Error(response.status);
+                    }
+                    return response;
+                })
+                .then(
+                    response => {
+                        console.log('Came to Fetch Result ');
+                        response.json().then(data => {
+                            console.log('fetched data', data);
+                            this.setState({ customervehiclesData: data });
+                        });
+                    })
+                .catch(
+                    error => {
+                        console.log('Error ', error);
+                    });
+
+        }
+    
 
     onVINSearch = (event) => {
 
         // REST API Code to search VIN here
+        // 4JGBB86E68A479042
+        /*2HGFB2F8XFH591259 
+| 2GCEC19V741135916 |
+| 1GC1CXC87DF166664 |
+| JH4CU2F45DC011988 |
+| 4JGBB86E68A479042 |
+| 2HGFB2F8XFH591260 |
+| 2GCEC19V741135917 |
+| 1GC1CXC87DF166665 */
+        
+        let url = URL + 'customer/searchVIN?vin=' + this.state.vinSearchValue;
 
-        let vin = this.state.vinSearchValue;
-        if (vin === '100') {
-            this.setState({ vinSearchError: false, showVinConfirmArea: true });
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
 
-        } else {
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
 
-            this.setState({ vinSearchError: true, vinhelperText: 'VIN not found', showVinConfirmArea: false });
+                    if (response.status !== 200) {
+                        this.setState({ vinSearchError: true, vinhelperText: 'VIN not found', showVinConfirmArea: false });
+                        return;
+                    }
 
-        }
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.setState({ vinResultData: data, vinSearchError: false, showVinConfirmArea: true});
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+      
     }
+
+    onVINConfirm = (event) => {
+
+        let data = this.state.vinResultData;
+        let customerId = localStorage.getItem('customerId');
+        data.customerId = customerId;
+
+        // REST API Code to search VIN here
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        };
+
+
+        let url = URL + 'customer/addVinForCustomer';
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+
+                    if (response.status !== 200) {
+                        this.setState({ vinSearchError: true, vinhelperText: 'VIN not added', showVinConfirmArea: true });
+                        return;
+                    }
+
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.getMyVehicles();
+                        this.handleChange('panel2');
+                        this.setState({ vinSearchError: false, showVinConfirmArea: true, vinhelperText: 'VIN sucessfully added'   });
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+      
+    }
+
 
     render() {
         return (
@@ -142,7 +259,7 @@ export default class MyVehicles extends React.Component {
                                 <div>
 
                                 <Button variant="contained" color="primary"
-                                    onClick={this.onVINSearch}>
+                                    onClick={this.onVINConfirm}>
                                     Confirm Phone/Email
                             </Button>
                                 </div>
@@ -168,7 +285,7 @@ export default class MyVehicles extends React.Component {
                             style={{ width: '100%' }}
                             title="My Vehicles"
                             columns={[
-                                { title: 'Maker', field: 'maker' },
+                                { title: 'Maker', field: 'make' },
                                 { title: 'Model', field: 'model' },
                                 { title: 'Year', field: 'year'},
                                 { title: 'VIN', field: 'vin' },

@@ -7,6 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MaterialTable from 'material-table';
 import Button from '@material-ui/core/Button';
 import PaymentForm from '../sharedComponents/paymentForm';
+import { URL } from '../sharedComponents/constants';
 
 import { subscriptions, services, vehicles } from '../staticStore/storeData';
 
@@ -19,12 +20,44 @@ export default class BuySubscriptions extends React.Component {
             expanded: 'panel1',
             setExpanded: false,
             selectedSubDetail: {},
-            subscriptionData: subscriptions,
+            subscriptionData: [],
             servicesData: services,
             serviceIdsOfSelectedSub: [1, 2],
             vehicleData: vehicles,
             vehicleIdsOfSelectedSub: [2, 3],
         }
+    }
+
+    componentDidMount() {
+        this.getAllSubscriptions();
+    }
+
+    getAllSubscriptions = () => {
+
+        //http://localhost:7081/owner-site/manufacturer/getAllServices
+        let url = URL + 'manufacturer/getAllSubscriptions';
+
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.setState({ subscriptionData: data });
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
     }
 
     handleChange = panel => (event, isExpanded) => {
