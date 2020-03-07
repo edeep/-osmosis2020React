@@ -21,7 +21,7 @@ export default class BuySubscriptions extends React.Component {
             setExpanded: false,
             selectedSubDetail: {},
             subscriptionData: [],
-            servicesData: services,
+            servicesData: [],
             serviceIdsOfSelectedSub: [1, 2],
             vehicleData: vehicles,
             vehicleIdsOfSelectedSub: [2, 3],
@@ -33,6 +33,52 @@ export default class BuySubscriptions extends React.Component {
         
             this.getAllSubscriptions();
        
+    }
+
+
+    getServicesForSelectedSubscription = () => {
+
+        let data = this.state.selectedSubDetail;
+
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        };
+
+        let url = URL + 'manufacturer/getServicesBySubscription';
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    if (response.status !== 200) {
+
+                        this.setState({ buyStatusInfo: 'Subscription purchase failed' });
+                        return;
+                    }
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                       
+                        this.setState({ servicesData: data })
+
+
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
     }
 
     onBuySubscription = (event) => {
@@ -95,7 +141,7 @@ export default class BuySubscriptions extends React.Component {
         //http://localhost:7081/owner-site/manufacturer/getAllServices
 
 
-        if (localStorage.getItem('allSubscriptionsCustmer') === null) {
+        if (localStorage.getItem('allSubscriptionsManfacturer') === null) {
             let url = URL + 'manufacturer/getAllSubscriptions';
 
             return fetch(url)
@@ -112,7 +158,7 @@ export default class BuySubscriptions extends React.Component {
                         response.json().then(data => {
                             console.log('fetched data', data);
                             this.setState({ subscriptionData: data });
-                            localStorage.setItem('allSubscriptionsCustmer', JSON.stringify(data));
+                            localStorage.setItem('allSubscriptionsManfacturer', JSON.stringify(data));
                         });
                     })
                 .catch(
@@ -121,7 +167,7 @@ export default class BuySubscriptions extends React.Component {
                     });
         } else {
             console.log('Getting from local storahe for getAllSubscriptions data');
-            this.setState({ subscriptionData: JSON.parse(localStorage.getItem('allSubscriptionsCustmer')) });
+            this.setState({ subscriptionData: JSON.parse(localStorage.getItem('allSubscriptionsManfacturer')) });
         }
 
     }
@@ -204,7 +250,7 @@ export default class BuySubscriptions extends React.Component {
                     servicesData.map((eachServiceData, index) => {
                         return (
                             <div key={index} >
-                                {eachServiceData.serviceName}
+                                {eachServiceData.servicename + ' - ' + eachServiceData.servicedec}
                                 
 
                             </div>
@@ -237,6 +283,7 @@ export default class BuySubscriptions extends React.Component {
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
                     this.setState({ expanded: 'panel2', selectedSubDetail: param })
+                    this.getServicesForSelectedSubscription(param);
                    
                 }}>
                 Buy/Detail
@@ -310,7 +357,6 @@ export default class BuySubscriptions extends React.Component {
                             <div style={{ padding: '10px', width: '30%' }}>
                                 <div><h5>Services Eligible </h5></div>
                           
-
                                 <div style={{ height: '200px', overflowY: 'scroll' }}>
                                     {this.displayServices(this.state.servicesData)}
                                 </div>

@@ -5,13 +5,14 @@ import Paper from '@material-ui/core/Paper';
 import MyVehicles from './myVehicles';
 import BuySubscriptions from './buySubscriptions';
 import MySubscriptions from './mySubscriptions';
+import MyServices from './myServices';
 
 export default class CustomerLandingPage extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            value: 0
+            value: 3
         }
     }
 
@@ -32,6 +33,8 @@ export default class CustomerLandingPage extends React.Component {
                 return <BuySubscriptions />
             case 2:
                 return <MySubscriptions />
+            case 3:
+                return <MyServices />
             default:
                 return <MyVehicles />
         }
