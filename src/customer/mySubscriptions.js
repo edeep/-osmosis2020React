@@ -22,7 +22,8 @@ export default class MySubscriptions extends React.Component {
             subscriptionData: [],
             selectedSubDetail: {},
             customervehiclesData: [],
-            selectedVIN:'-1'
+            selectedVIN: '-1',
+            detailButtonClicked: 'NA'
 
 
         }
@@ -131,16 +132,42 @@ export default class MySubscriptions extends React.Component {
         
     };
 
-    displayDetailButton = (param) => {
+    displayTranferButton = (param) => {
         console.log(param);
         return (
             <Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
-                    this.setState({ expanded: 'panel2', selectedSubDetail: param })
+                    this.setState({ expanded: 'panel2', selectedSubDetail: param, detailButtonClicked:'transfer' })
                 }}>
-                Detail
-                            </Button>);
+                Transfer
+            </Button>);
+
+    }
+
+    displayCancelButton = (param) => {
+        console.log(param);
+        return (
+            <Button variant="contained" data-sub={param} color="primary"
+                onClick={() => {
+                    console.log('onClick id is ', param.subscriptionId);
+                    this.setState({ expanded: 'panel2', selectedSubDetail: param, detailButtonClicked: 'cancel' });
+                }}>
+                Cancel
+            </Button>);
+
+    }
+
+    displayRefundButton = (param) => {
+        console.log(param);
+        return (
+            <Button variant="contained" data-sub={param} color="primary"
+                onClick={() => {
+                    console.log('onClick id is ', param.subscriptionId);
+                    this.setState({ expanded: 'panel2', selectedSubDetail: param, detailButtonClicked: 'refund' })
+                }}>
+                Refund
+            </Button>);
 
     }
 
@@ -183,7 +210,44 @@ export default class MySubscriptions extends React.Component {
 
     }
 
-    
+    cancelSubscription = () => {
+        let custSubId = this.state.selectedSubDetail.subscriptionId;
+        let vin = this.state.selectedVIN;
+        let customerId = localStorage.getItem('customerId');
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            }
+
+        };
+
+        let url = URL + 'customer/cancelSubscription?customerId=' + customerId +
+            '&subscriptionId=' + custSubId + '&vin=' + vin;
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.getAllSubscriptions();
+                        this.handleChange('panel1');
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+    }
     
     displayTransferButton = (param) => {
         console.log(param);
@@ -197,28 +261,7 @@ export default class MySubscriptions extends React.Component {
                             </Button>);
 
     }
-    displayCancelButton = (param) => {
-        console.log(param);
-        return (
-            <Button variant="contained" data-sub={param} color="primary"
-                onClick={() => {
-                    console.log('onClick id is ', param.subscriptionId);
-                    //this.setState({ expanded: 'panel2', selectedSubDetail: param })
-                }}>
-                Cancel
-                            </Button>);
-
-    }
-    displayRefundButton = (param) => {
-        console.log(param);
-        return (
-            <Button variant="contained" data-sub={param} color="primary"
-                onClick={() => {
-                    console.log('onClick id is ', param.subscriptionId);}}>
-               Refund
-                            </Button>);
-
-    }
+  
 
     displayStatus = (param) => {
         console.log(param);
@@ -241,7 +284,7 @@ export default class MySubscriptions extends React.Component {
                         aria-controls="panel1bh-content"
                         id="panel1bh-header"
                     >
-                        <Typography>My Sub </Typography>
+                        <Typography> Subscription Summary</Typography>
 
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'block' }}>
@@ -256,8 +299,8 @@ export default class MySubscriptions extends React.Component {
                                 { title: 'Subscription End', field: 'subscriptionEndDate', type: 'date' },
                                 { title: 'Price', field: 'subscriptionPrice' },
                                 { title: 'Status', field: 'subscriptionId', render: this.displayStatus },
-                                { title: 'Detail', field: 'subscriptionId', render: this.displayDetailButton },
-                                { title: 'Transfer', field: 'subscriptionId', render: this.displayTransferButton },
+                              
+                                { title: 'Transfer', field: 'subscriptionId', render: this.displayTranferButton },
                                 { title: 'Cancel', field: 'subscriptionId', render: this.displayCancelButton },
                                 { title: 'Refund', field: 'subscriptionId', render: this.displayRefundButton },
 
@@ -286,7 +329,7 @@ export default class MySubscriptions extends React.Component {
                         aria-controls="panel2bh-content"
                         id="panel2bh-header"
                     >
-                        <Typography >My Sub Details</Typography>
+                        <Typography >Subscription Details</Typography>
 
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'block' }}>
@@ -295,31 +338,63 @@ export default class MySubscriptions extends React.Component {
                             <div><b>Service Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
                             <div><b>Service Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
                             <div><b>Assigned VIN:</b> {this.state.selectedSubDetail.vin}</div>
-                            <div><b>Change VIN:</b><Select
-                                label="Select VIN"
-                                id="selectVIN"
-                                value={this.state.selectedVIN}
-                                onChange={this.handleChangeForVINSelect}
-                                style={{ fontSize: '14px',width:'400px' }}
-                            >
+                            {this.state.detailButtonClicked === 'transfer' ?
+                                <div style={{ borderStyle: 'solid', borderWidth: '0.5px'}}>
+                                    <p>
+                                        Changing the VIN is allowed only in the following conditions
+                                        <li>Subscription has not started</li>
+                                        <li>Vehicle group is the same</li>
+                                    </p>
+                                    <div><b>Change VIN:</b><Select
+                                        label="Select VIN"
+                                        id="selectVIN"
+                                        value={this.state.selectedVIN}
+                                        onChange={this.handleChangeForVINSelect}
+                                        style={{ fontSize: '14px', width: '400px' }}
+                                    >
 
-                                <MenuItem
-                                    key={-1}
-                                    value={-1}
+                                        <MenuItem
+                                            key={-1}
+                                            value={-1}
                                     
-                                    style={{ background: '#1976d2', color: 'white' }}
-                                >
-                                    Remove Attached VIN
+                                            style={{ background: '#1976d2', color: 'white' }}
+                                        >
+                                            Remove Attached VIN
                                 </MenuItem>
 
-                                {this.populateDropDownValue()}
+                                        {this.populateDropDownValue()}
                            
                                 
-                            </Select>
-                                <Button variant="contained" color="primary"
-                                    onClick={this.updateVINForSubscription}>
-                                    Change VIN </Button>
-                            </div>
+                                    </Select>
+                                        <Button variant="contained" color="primary"
+                                            onClick={this.updateVINForSubscription}>
+                                            Change VIN </Button>
+                                    </div>
+                                </div> : <div></div>}
+                            
+                            {this.state.detailButtonClicked === 'cancel' ?
+                                <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
+                                    <p>
+                                        Cancelling the Subscription is allowed only in the following conditions
+                                        <li>Subscription is in Trial Period</li>
+                                        
+                                    </p>
+                                    <Button variant="contained" color="primary" onClick={this.cancelSubscription}
+                                           >
+                                           Cancel </Button>
+                                </div> : <div></div>}
+                            
+                            {this.state.detailButtonClicked === 'refund' ?
+                                <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
+                                    <p>
+                                        Refund of Subscription in case of sale is possible only in the following conditions
+                                        <li>Subscription has not been used</li>
+
+                                    </p>
+                                    <Button variant="contained" color="primary"
+                                        >
+                                        Refund </Button>
+                                </div> : <div></div>}
                         </div>
 
 

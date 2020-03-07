@@ -12,7 +12,7 @@ export default class CustomerLandingPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 3
+            value: 2
         }
     }
 
