@@ -129,7 +129,7 @@ export default class PaymentForm extends React.Component {
                         </div>
                         <input type="hidden" name="issuer" value={issuer} />
                         <div className="form-actions">
-                            <Button variant="contained" color="primary">PAY</Button>
+                            <Button variant="contained" color="primary" onClick={this.props.buy}>PAY</Button>
                      
                         </div>
                     </form>

@@ -21,7 +21,9 @@ export default class AppLayoutWithHeader extends React.Component {
     }
 
     render() {
+        localStorage.clear();
         localStorage.setItem('customerId', 1);
+        
         return (
             <div> 
                <Grid container style={{display:'flex'}}>

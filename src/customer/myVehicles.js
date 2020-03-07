@@ -78,6 +78,12 @@ export default class MyVehicles extends React.Component {
                 .then(
                     response => {
                         console.log('Came to Fetch Result ');
+
+                        if (response.status !== 200) {
+                            this.setState({ customervehiclesData: [] });
+                            return;
+                        }
+
                         response.json().then(data => {
                             console.log('fetched data', data);
                             this.setState({ customervehiclesData: data });

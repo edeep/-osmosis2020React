@@ -25,19 +25,36 @@ export default class BuySubscriptions extends React.Component {
             serviceIdsOfSelectedSub: [1, 2],
             vehicleData: vehicles,
             vehicleIdsOfSelectedSub: [2, 3],
+            buyStatusInfo:''
         }
     }
 
     componentDidMount() {
-        this.getAllSubscriptions();
+        
+            this.getAllSubscriptions();
+       
     }
 
-    getAllSubscriptions = () => {
+    onBuySubscription = (event) => {
 
-        //http://localhost:7081/owner-site/manufacturer/getAllServices
-        let url = URL + 'manufacturer/getAllSubscriptions';
+        this.setState({ buyStatusInfo: '' });
+        let customerId = localStorage.getItem('customerId');
+        let subscriptionId = this.state.selectedSubDetail.subscriptionId;
+        let vehicleId = '-1';
+        let subscriptionStartDate = '10/03/2020';
+        let subscriptionEndDate = '10/12/2020';
 
-        return fetch(url)
+        let url = URL + 'customer/addCustomerSubscription?customerId=' + customerId +
+            '&subscriptionId=' + subscriptionId + '&vehicleId=' + vehicleId
+            + '&subscriptionStartDate=' +subscriptionStartDate + '&subscriptionEndDate=' + subscriptionEndDate;
+
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            }
+        };
+        return fetch(url, options)
             .then(response => {
                 if (!response.ok) {
 
@@ -48,15 +65,64 @@ export default class BuySubscriptions extends React.Component {
             .then(
                 response => {
                     console.log('Came to Fetch Result ');
+
+                    if (response.status !== 200) {
+
+                        this.setState({ buyStatusInfo: 'Subscription purchase failed' });
+                        return;
+                    }
+
+                    this.setState({ buyStatusInfo: 'Subscription purchase success!' });
+
                     response.json().then(data => {
                         console.log('fetched data', data);
-                        this.setState({ subscriptionData: data });
+                        //this.getMyVehicles();
+                        //this.handleChange('panel2');
+                        //this.setState({ vinSearchError: false, showVinConfirmArea: true, vinhelperText: 'VIN sucessfully added' });
                     });
                 })
             .catch(
                 error => {
                     console.log('Error ', error);
                 });
+
+
+    }
+
+
+    getAllSubscriptions = () => {
+
+        //http://localhost:7081/owner-site/manufacturer/getAllServices
+
+
+        if (localStorage.getItem('allSubscriptionsCustmer') === null) {
+            let url = URL + 'manufacturer/getAllSubscriptions';
+
+            return fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+
+                        throw Error(response.status);
+                    }
+                    return response;
+                })
+                .then(
+                    response => {
+                        console.log('Came to Fetch Result ');
+                        response.json().then(data => {
+                            console.log('fetched data', data);
+                            this.setState({ subscriptionData: data });
+                            localStorage.setItem('allSubscriptionsCustmer', JSON.stringify(data));
+                        });
+                    })
+                .catch(
+                    error => {
+                        console.log('Error ', error);
+                    });
+        } else {
+            console.log('Getting from local storahe for getAllSubscriptions data');
+            this.setState({ subscriptionData: JSON.parse(localStorage.getItem('allSubscriptionsCustmer')) });
+        }
 
     }
 
@@ -171,6 +237,7 @@ export default class BuySubscriptions extends React.Component {
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
                     this.setState({ expanded: 'panel2', selectedSubDetail: param })
+                   
                 }}>
                 Buy/Detail
                             </Button>);
@@ -228,28 +295,28 @@ export default class BuySubscriptions extends React.Component {
                         <Typography >Subscriptions Details</Typography>
 
                     </ExpansionPanelSummary>
-                    <ExpansionPanelDetails style={{ display: 'flex' }}>
-                        <div style={{ padding: '10px' }}>
-                            <PaymentForm />
+                    <ExpansionPanelDetails style={{ display: 'block' }}>
+                        <div style={{ textAlign: 'left' }}>
+                            {this.state.buyStatusInfo}
                         </div>
-                        
+                        <div style={{ textAlign: 'left' }}>
+                            <div><b>Service Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
+                            <div><b>Service Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
+                        </div>
                         <div style={{ display: 'flex' }}>
-                            <div style={{ padding: '10px' }}>
-                                <div><h5>Service Name:</h5> {this.state.selectedSubDetail.subscriptionName}</div>
-                                <div><h5>Service Desc:</h5> {this.state.selectedSubDetail.subscriptionDesc}</div>
-                            </div>
-
-                            <div style={{ padding: '10px' }}>
+                        <div style={{ padding: '10px', width:'40%' }}>
+                                <PaymentForm buy={this.onBuySubscription}/>
+                        </div>
+                            <div style={{ padding: '10px', width: '30%' }}>
                                 <div><h5>Services Eligible </h5></div>
                           
 
                                 <div style={{ height: '200px', overflowY: 'scroll' }}>
                                     {this.displayServices(this.state.servicesData)}
                                 </div>
-                            </div>
-                            <div style={{ padding: '10px' }}>
+                        </div>
+                            <div style={{ padding: '10px', width: '30%' }}>
                                 <div><h5>Vehicles Eligible</h5></div>
-                               
                                 <div style={{ height: '200px', overflowY: 'scroll' }}>{this.displayVehicles(this.state.vehicleData)}</div>
                             </div>
                         </div>
