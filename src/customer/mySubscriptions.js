@@ -335,11 +335,13 @@ export default class MySubscriptions extends React.Component {
                     <ExpansionPanelDetails style={{ display: 'block' }}>
 
                         <div style={{ textAlign: 'left' }}>
-                            <div><b>Service Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
-                            <div><b>Service Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
-                            <div><b>Assigned VIN:</b> {this.state.selectedSubDetail.vin}</div>
+                          
                             {this.state.detailButtonClicked === 'transfer' ?
-                                <div style={{ borderStyle: 'solid', borderWidth: '0.5px'}}>
+                                <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
+                                    <h3>Transfer Subscription</h3>
+                                    <div><b>Service Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
+                                    <div><b>Service Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
+                                    <div><b>Assigned VIN:</b> {this.state.selectedSubDetail.vin}</div>
                                     <p>
                                         Changing the VIN is allowed only in the following conditions
                                         <li>Subscription has not started</li>
@@ -366,14 +368,21 @@ export default class MySubscriptions extends React.Component {
                            
                                 
                                     </Select>
+                                        <div>
                                         <Button variant="contained" color="primary"
                                             onClick={this.updateVINForSubscription}>
-                                            Change VIN </Button>
+                                                Change VIN </Button>
+                                        </div>
+                                        
                                     </div>
                                 </div> : <div></div>}
                             
                             {this.state.detailButtonClicked === 'cancel' ?
                                 <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
+                                    <h3>Cancel Subscription</h3>
+                                    <div><b>Service Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
+                                    <div><b>Service Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
+                                    <div><b>Assigned VIN:</b> {this.state.selectedSubDetail.vin}</div>
                                     <p>
                                         Cancelling the Subscription is allowed only in the following conditions
                                         <li>Subscription is in Trial Period</li>
@@ -386,6 +395,10 @@ export default class MySubscriptions extends React.Component {
                             
                             {this.state.detailButtonClicked === 'refund' ?
                                 <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
+                                    <h3>Refund Subscription</h3>
+                                    <div><b>Service Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
+                                    <div><b>Service Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
+                                    <div><b>Assigned VIN:</b> {this.state.selectedSubDetail.vin}</div>
                                     <p>
                                         Refund of Subscription in case of sale is possible only in the following conditions
                                         <li>Subscription has not been used</li>

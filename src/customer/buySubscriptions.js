@@ -22,9 +22,9 @@ export default class BuySubscriptions extends React.Component {
             selectedSubDetail: {},
             subscriptionData: [],
             servicesData: [],
-            serviceIdsOfSelectedSub: [1, 2],
-            vehicleData: vehicles,
-            vehicleIdsOfSelectedSub: [2, 3],
+          
+            vehicleData: [],
+          
             buyStatusInfo:''
         }
     }
@@ -63,7 +63,7 @@ export default class BuySubscriptions extends React.Component {
                     console.log('Came to Fetch Result ');
                     if (response.status !== 200) {
 
-                        this.setState({ buyStatusInfo: 'Subscription purchase failed' });
+                      
                         return;
                     }
                     response.json().then(data => {
@@ -80,6 +80,52 @@ export default class BuySubscriptions extends React.Component {
                 });
 
     }
+
+    getVehiclesForSelectedSubscription = () => {
+
+        let data = this.state.selectedSubDetail;
+
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        };
+
+        let url = URL + 'manufacturer/getVehiclesBySubscription';
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    if (response.status !== 200) {
+
+
+                        return;
+                    }
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+
+                        this.setState({ vehicleData: data })
+
+
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+    }
+
 
     onBuySubscription = (event) => {
 
@@ -178,33 +224,7 @@ export default class BuySubscriptions extends React.Component {
         this.setState({ expanded: value });
     };
 
-    handleChangeCheckBox = event => {
-        console.log('Check box clicked', event);
-        let serviceIds = [];
-        if (event.target.checked) {
-            serviceIds = this.state.serviceIdsOfSelectedSub.concat(parseInt(event.target.value));
-        } else {
-            let index = this.state.serviceIdsOfSelectedSub.indexOf(parseInt(event.target.value));
-            this.state.serviceIdsOfSelectedSub.splice(index, 1);
-            serviceIds = this.state.serviceIdsOfSelectedSub;
-        }
 
-        this.setState({ serviceIdsOfSelectedSub: serviceIds });
-    };
-
-    handleChangeCheckBoxVehicle = event => {
-        console.log('Check box clicked', event);
-        let vehicleIds = [];
-        if (event.target.checked) {
-            vehicleIds = this.state.vehicleIdsOfSelectedSub.concat(parseInt(event.target.value));
-        } else {
-            let index = this.state.vehicleIdsOfSelectedSub.indexOf(parseInt(event.target.value));
-            this.state.vehicleIdsOfSelectedSub.splice(index, 1);
-            vehicleIds = this.state.vehicleIdsOfSelectedSub;
-        }
-
-        this.setState({ vehicleIdsOfSelectedSub: vehicleIds });
-    };
 
     addNewService = (data) => {
 
@@ -227,23 +247,7 @@ export default class BuySubscriptions extends React.Component {
     }
 
 
-    checkIfChecked = (serviceId) => {
 
-        if (this.state.serviceIdsOfSelectedSub.indexOf(serviceId) > -1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    checkIfCheckedVehicle = (vehicleId) => {
-
-        if (this.state.vehicleIdsOfSelectedSub.indexOf(vehicleId) > -1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     displayServices = (servicesData) => {
         return (
@@ -266,7 +270,7 @@ export default class BuySubscriptions extends React.Component {
                     vehicleData.map((eachvehicleData, index) => {
                         return (
                             <div key={index} >
-                                {eachvehicleData.vehicleName}
+                                {eachvehicleData.make + ' ' + eachvehicleData.model +' '+eachvehicleData.year}
                                 
 
                             </div>
@@ -282,8 +286,10 @@ export default class BuySubscriptions extends React.Component {
             <Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
-                    this.setState({ expanded: 'panel2', selectedSubDetail: param })
+                
                     this.getServicesForSelectedSubscription(param);
+                    this.getVehiclesForSelectedSubscription(param);
+                    this.setState({ expanded: 'panel2', selectedSubDetail: param })
                    
                 }}>
                 Buy/Detail
@@ -343,7 +349,8 @@ export default class BuySubscriptions extends React.Component {
 
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'block' }}>
-                        <div style={{ textAlign: 'left' }}>
+                        <h3>Buy Subscription</h3>
+                        <div style={{ textAlign: 'left', color:'green' }}>
                             {this.state.buyStatusInfo}
                         </div>
                         <div style={{ textAlign: 'left' }}>
@@ -354,14 +361,14 @@ export default class BuySubscriptions extends React.Component {
                         <div style={{ padding: '10px', width:'40%' }}>
                                 <PaymentForm buy={this.onBuySubscription}/>
                         </div>
-                            <div style={{ padding: '10px', width: '30%' }}>
+                            <div style={{ padding: '10px', width: '35%' }}>
                                 <div><h5>Services Eligible </h5></div>
                           
                                 <div style={{ height: '200px', overflowY: 'scroll' }}>
                                     {this.displayServices(this.state.servicesData)}
                                 </div>
                         </div>
-                            <div style={{ padding: '10px', width: '30%' }}>
+                            <div style={{ padding: '10px', width: '25%' }}>
                                 <div><h5>Vehicles Eligible</h5></div>
                                 <div style={{ height: '200px', overflowY: 'scroll' }}>{this.displayVehicles(this.state.vehicleData)}</div>
                             </div>

@@ -24,7 +24,8 @@ export default class MyServices extends React.Component {
             selectedServiceDetail: {},
             customervehiclesData: [],
             selectedVIN: '-1',
-            customerComplaintsForService:''
+            customerComplaintsForService: '',
+            detailButtonclicked:'NA'
 
 
         }
@@ -148,7 +149,7 @@ export default class MyServices extends React.Component {
             <Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
-                    this.setState({ expanded: 'panel2', selectedServiceDetail: param })
+                    this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked:'requestService' })
                 }}>
                 Request Service
                             </Button>);
@@ -165,7 +166,7 @@ export default class MyServices extends React.Component {
             <Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
-                    this.setState({ expanded: 'panel2', selectedServiceDetail: param })
+                    this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked: 'serviceHistory' })
                 }}>
                 View History
                             </Button>);
@@ -240,8 +241,12 @@ export default class MyServices extends React.Component {
                     <ExpansionPanelDetails style={{ display: 'block' }}>
 
                         <div style={{ textAlign: 'left' }}>
-                            <div><b>Service Name:</b> {this.state.selectedServiceDetail.servicename}</div>
-                            <div><b>Service Desc:</b> {this.state.selectedServiceDetail.servicedec}</div>
+                           
+                            {this.state.detailButtonclicked === 'requestService' ?
+                                <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
+                                    <h3>Request Service</h3>
+                                    <div><b>Service Name:</b> {this.state.selectedServiceDetail.servicename}</div>
+                                    <div><b>Service Desc:</b> {this.state.selectedServiceDetail.servicedec}</div>
                             <div><b>Select Dealer:</b>
                                 <Select
                                     label="Select Dealer"
@@ -288,7 +293,81 @@ export default class MyServices extends React.Component {
                                     >
                                     Initate Service
                             </Button>
-                            </div>
+                                </div>
+                            </div> : <div></div>}
+                            
+                            {this.state.detailButtonclicked === 'serviceHistory' ?
+                                <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
+                                    <h3>Service Report</h3>
+                                  
+                                    <div><b>Service Name:</b> {this.state.selectedServiceDetail.servicename}</div>
+                                    <div><b>Service Desc:</b> {this.state.selectedServiceDetail.servicedec}</div>
+                                    <div><b>Dealer Name:</b> {this.state.selectedServiceDetail.servicename}</div>
+                                    <div><b>Service Station Name:</b> {this.state.selectedServiceDetail.servicedec}</div>
+                                    <div><b>Service Start Date:</b> </div>
+                                    <div><b>Service Completed Date:</b> </div>
+                                    <div><b>Service Total Cost:</b> </div>
+                                    <div>
+                                        <b>Customer Service Complaints:</b>
+                                        <TextField
+
+                                            id="standard-error-helper-text"
+                                            variant="filled"
+                                            disabled 
+                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                            multiline
+                                            rows="6"
+                                            style={{ width: '500px' }}
+                                            
+                                        />
+                                    </div>
+                                    <div>
+                                        <b>Customer Service Complaints:</b>
+                                        <TextField
+
+                                            id="standard-error-helper-text"
+                                            variant="filled"
+                                            disabled
+                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                            multiline
+                                            rows="6"
+                                            style={{ width: '500px' }}
+
+                                        />
+                                    </div>
+                                    <div>
+                                        <b>Service Analysis:</b>
+                                        <TextField
+
+                                            id="standard-error-helper-text"
+                                            variant="filled"
+                                            disabled
+                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                            multiline
+                                            rows="6"
+                                            style={{ width: '500px' }}
+
+                                        />
+                                    </div>
+                                    <div>
+                                        <b>Service Repairs Done:</b>
+                                        <TextField
+
+                                            id="standard-error-helper-text"
+                                            variant="filled"
+                                            disabled
+                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                            multiline
+                                            rows="6"
+                                            style={{ width: '500px' }}
+
+                                        />
+                                    </div>
+                                    <div><b>Service Cost:</b> </div>
+                            
+                                </div> :
+                                <div></div>
+                            }
                         </div>
 
 
