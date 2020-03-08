@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import MaterialTable from 'material-table';
 import { custmoerVehicles } from '../staticStore/storeData';
 import { URL } from '../sharedComponents/constants';
+import './myVehicles.css'
 
 export default class MyVehicles extends React.Component {
 
@@ -29,7 +30,8 @@ export default class MyVehicles extends React.Component {
             emailConfirmValue: '',
             emailConfirmError: false,
             emailConfirmhelperText: '',
-            customervehiclesData: []
+            customervehiclesData: [],
+            showRDRMessage: false
            
            
         }
@@ -59,6 +61,40 @@ export default class MyVehicles extends React.Component {
     }
 
     
+    updateCustomerVehicle = (data) => {
+
+        let options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        };
+
+        let url = URL + 'manufacturer/TBD';
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.getMyVehicles();
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+    }
         
     getMyVehicles = () => {
 
@@ -86,7 +122,19 @@ export default class MyVehicles extends React.Component {
 
                         response.json().then(data => {
                             console.log('fetched data', data);
-                            this.setState({ customervehiclesData: data });
+                            let totalVehicles = data.length;
+                            let noOfvehiclesWithRDRDate = 0;
+                            let showRDRMessage = true;
+                            data.forEach((eachData, index) => {
+                                if (eachData.rdrRegisteredDate) {
+                                    noOfvehiclesWithRDRDate = noOfvehiclesWithRDRDate + 1;
+                                }
+                                
+                            })
+                            if (totalVehicles === noOfvehiclesWithRDRDate) {
+                                showRDRMessage = false;
+                            }
+                            this.setState({ customervehiclesData: data, showRDRMessage: showRDRMessage });
                         });
                     })
                 .catch(
@@ -196,6 +244,7 @@ export default class MyVehicles extends React.Component {
     render() {
         return (
             <div >
+                {this.state.showRDRMessage ? < Typography className='blinking'>Add RDR Date to your Vehicles and win $100 Cashback!</Typography> : ''}
                 <ExpansionPanel expanded={this.state.expanded === 'panel1'}
                     onChange={this.handleChange('panel1')}>
                     <ExpansionPanelSummary
@@ -283,6 +332,7 @@ export default class MyVehicles extends React.Component {
                         id="panel2bh-header"
                     >
                         <Typography >My Vehicles</Typography>
+                      
 
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'flex' }}>
@@ -291,11 +341,12 @@ export default class MyVehicles extends React.Component {
                             style={{ width: '100%' }}
                             title="My Vehicles"
                             columns={[
-                                { title: 'Maker', field: 'make' },
-                                { title: 'Model', field: 'model' },
-                                { title: 'Year', field: 'year'},
-                                { title: 'VIN', field: 'vin' },
-                                { title: 'Registered No', field: 'registationNo'}
+                                { title: 'Maker', field: 'make',editable:false },
+                                { title: 'Model', field: 'model', editable: false },
+                                { title: 'Year', field: 'year', editable: false},
+                                { title: 'VIN', field: 'vin', editable: false },
+                                { title: 'Registered No', field: 'registationNo', editable: false },
+                                { title: 'RDR Date', field: 'rdrRegisteredDate', type: 'date' }
 
 
                             ]}
@@ -307,6 +358,17 @@ export default class MyVehicles extends React.Component {
                                     backgroundColor: '#1976d2',
                                     color: 'white'
                                 }
+                            }}
+
+                            editable={{
+                                
+                                onRowUpdate: (newData, oldData) =>
+                                    new Promise((resolve, reject) => {
+                                        setTimeout(() => {
+                                            this.updateCustomerVehicle(newData);
+                                            resolve()
+                                        }, 1000)
+                                    })
                             }}
 
                         />

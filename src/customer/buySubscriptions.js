@@ -8,6 +8,14 @@ import MaterialTable from 'material-table';
 import Button from '@material-ui/core/Button';
 import PaymentForm from '../sharedComponents/paymentForm';
 import { URL } from '../sharedComponents/constants';
+import 'date-fns';
+import DatePicker from 'react-date-picker';
+
+
+import DateFnsUtils from '@date-io/date-fns';
+import {MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+
+
 
 import { subscriptions, services, vehicles } from '../staticStore/storeData';
 
@@ -22,12 +30,18 @@ export default class BuySubscriptions extends React.Component {
             selectedSubDetail: {},
             subscriptionData: [],
             servicesData: [],
-          
+        
             vehicleData: [],
+            selectedDate: new Date(),
           
             buyStatusInfo:''
         }
     }
+
+    handleDateChange = date => {
+        this.setState({ selectedDate:date});
+    };
+
 
     componentDidMount() {
         
@@ -133,10 +147,28 @@ export default class BuySubscriptions extends React.Component {
         let customerId = localStorage.getItem('customerId');
         let subscriptionId = this.state.selectedSubDetail.subscriptionId;
         let vehicleId = '-1';
-        let subscriptionStartDate = '10/03/2020';
+        // let subscriptionStartDate = '10/03/2020';
+        
+
+        let enteredDate = this.state.selectedDate;
+        let dd = enteredDate.getDate();
+
+        let mm = enteredDate.getMonth() + 1;
+        let yyyy = enteredDate.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        
+        let subscriptionStartDate = dd + '/' + mm + '/' + yyyy;
+        console.log(subscriptionStartDate);
+
         let subscriptionEndDate = '10/12/2020';
 
-        let url = URL + 'customer/addCustomerSubscription?customerId=' + customerId +
+       let url = URL + 'customer/addCustomerSubscription?customerId=' + customerId +
             '&subscriptionId=' + subscriptionId + '&vehicleId=' + vehicleId
             + '&subscriptionStartDate=' +subscriptionStartDate + '&subscriptionEndDate=' + subscriptionEndDate;
 
@@ -177,7 +209,7 @@ export default class BuySubscriptions extends React.Component {
                 error => {
                     console.log('Error ', error);
                 });
-
+    
 
     }
 
@@ -350,12 +382,17 @@ export default class BuySubscriptions extends React.Component {
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'block' }}>
                         <h3>Buy Subscription</h3>
+                       
                         <div style={{ textAlign: 'left', color:'green' }}>
                             {this.state.buyStatusInfo}
                         </div>
                         <div style={{ textAlign: 'left' }}>
                             <div><b>Service Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
                             <div><b>Service Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
+                            <div><b>Start Subscription On:</b><DatePicker
+                                onChange={this.handleDateChange}
+                                value={this.state.selectedDate}
+                            /></div>
                         </div>
                         <div style={{ display: 'flex' }}>
                         <div style={{ padding: '10px', width:'40%' }}>
