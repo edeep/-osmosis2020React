@@ -46,11 +46,11 @@ export default class AppLayoutWithHeader extends React.Component {
                             <Grid item xs={12} sm={12} ><h5>'You are not authorized!' </h5></Grid> : ''}
                         <Grid item xs={12} sm={12} >
                             <div style={{ paddingLeft: '20px' }}>
-                                <h5>Please use the below Login Credentails</h5>
-                                <div>-------------------------------------------------------</div>
-                                <div>osmosis2020manu@gmail.com/Osmosis2020 - Manufacturer/Company Login</div>
-                                <div>osmosis2020dealer@gmail.com/Osmosis2020 - Dealer Login</div>
-                                <div>osmosis2020cust01@gmail.com/Osmosis2020- Customer Login</div>
+                                <h1>Welcome to Osmosis 2020 !</h1>
+                                <li>Balamurugan Jothilingam</li>
+                                <li>Pradeep Dhavakumar</li>
+                                <li>Siviah Polamreddy</li>
+                                <li>Balaji Sridharan</li>
                             </div>
                         </Grid>
                     </Grid>

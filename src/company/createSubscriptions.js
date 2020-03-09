@@ -176,6 +176,10 @@ export default class CreateSubscription extends React.Component {
             .then(
                 response => {
                     console.log('Came to Fetch Result ');
+                    if (response.status !== 200) {
+                        //this.setState({ servicesDataForCustomer: [] });
+                        return;
+                    }
                     response.json().then(data => {
                         console.log('fetched data', data);
                         this.getAllSubscriptions();
@@ -453,7 +457,7 @@ export default class CreateSubscription extends React.Component {
                                 { title: 'Subscription Start', field: 'subscriptionStartDate', type: 'date' },
                                 { title: 'Subscription End', field: 'subscriptionEndDate', type: 'date' },
                                 { title: 'Price', field: 'subscriptionPrice' },
-                                { title: 'Detail', field: 'subscriptionId', render: this.displayDetailButton },
+                                { title: 'Detail', field: 'subscriptionId', editable:false, render: this.displayDetailButton },
 
 
                             ]}
