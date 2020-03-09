@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import { URL } from '../sharedComponents/constants';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import moment from 'moment';
 
 export default class MySubscriptions extends React.Component {
 
@@ -265,9 +266,22 @@ export default class MySubscriptions extends React.Component {
 
     displayStatus = (param) => {
         console.log(param);
+        let startDate = moment(param.subscriptionStartDate);
+        let currentDate = moment();
+        let diffInDays = currentDate.diff(startDate, 'days');
+        console.log('Diff in days', diffInDays);
+        let status = 'NA';
+        if (diffInDays < 0) {
+            status = 'Scheduled'
+        } else if (diffInDays >= 0 && diffInDays < 8) {
+            status = 'Trial'
+        } else {
+            status ='In Force'
+        }
+
         return (
            <div>
-                Status
+                {status}
             </div>
                           );
 

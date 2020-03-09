@@ -306,7 +306,7 @@ export default class MyServices extends React.Component {
                                     <div><b>Service Station Name:</b> {this.state.selectedServiceDetail.servicedec}</div>
                                     <div><b>Service Start Date:</b> </div>
                                     <div><b>Service Completed Date:</b> </div>
-                                    <div><b>Service Total Cost:</b> </div>
+                                
                                     <div>
                                         <b>Customer Service Complaints:</b>
                                         <TextField
@@ -321,8 +321,9 @@ export default class MyServices extends React.Component {
                                             
                                         />
                                     </div>
+                                    <br></br>
                                     <div>
-                                        <b>Customer Service Complaints:</b>
+                                        <span><b>Customer Service Analysis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></span>
                                         <TextField
 
                                             id="standard-error-helper-text"
@@ -335,8 +336,9 @@ export default class MyServices extends React.Component {
 
                                         />
                                     </div>
+                                    <br></br>
                                     <div>
-                                        <b>Service Analysis:</b>
+                                        <b>Service Repairs Done&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b>
                                         <TextField
 
                                             id="standard-error-helper-text"
@@ -349,21 +351,7 @@ export default class MyServices extends React.Component {
 
                                         />
                                     </div>
-                                    <div>
-                                        <b>Service Repairs Done:</b>
-                                        <TextField
-
-                                            id="standard-error-helper-text"
-                                            variant="filled"
-                                            disabled
-                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
-                                            multiline
-                                            rows="6"
-                                            style={{ width: '500px' }}
-
-                                        />
-                                    </div>
-                                    <div><b>Service Cost:</b> </div>
+                                    <div><b>Total Service Cost:</b> </div>
                             
                                 </div> :
                                 <div></div>
