@@ -11,14 +11,6 @@ import { URL } from '../sharedComponents/constants';
 import 'date-fns';
 import DatePicker from 'react-date-picker';
 
-
-import DateFnsUtils from '@date-io/date-fns';
-import {MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-
-
-
-import { subscriptions, services, vehicles } from '../staticStore/storeData';
-
 export default class BuySubscriptions extends React.Component {
 
     constructor(props) {

@@ -4,7 +4,6 @@ import AddBox from '@material-ui/icons/AddBox';
 import Edit from '@material-ui/icons/Edit';
 import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import { forwardRef } from 'react';
-import { services } from '../staticStore/storeData';
 import { URL } from '../sharedComponents/constants';
 
 export default class CreateServices extends React.Component {

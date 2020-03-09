@@ -7,7 +7,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import MaterialTable from 'material-table';
-import { custmoerVehicles } from '../staticStore/storeData';
 import { URL } from '../sharedComponents/constants';
 import './myVehicles.css'
 import moment from 'moment';
@@ -91,7 +90,7 @@ export default class MyVehicles extends React.Component {
                     console.log('Came to Fetch Result ');
                     response.json().then(data => {
                         console.log('fetched data', data);
-                       // this.getMyVehicles();
+                       this.getMyVehicles();
                     });
                 })
             .catch(
