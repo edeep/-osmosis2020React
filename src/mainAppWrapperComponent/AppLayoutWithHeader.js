@@ -10,8 +10,8 @@ export default class AppLayoutWithHeader extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isAuthorized: true,
-            userRole:'cust'
+            isAuthorized: false,
+            userRole:'NA'
         }
 
     }
@@ -49,8 +49,8 @@ export default class AppLayoutWithHeader extends React.Component {
                                 <h5>Please use the below Login Credentails</h5>
                                 <div>-------------------------------------------------------</div>
                                 <div>osmosis2020manu@gmail.com/Osmosis2020 - Manufacturer/Company Login</div>
-                                <div>osmosis2020dealer@gmail.com - Dealer Login</div>
-                                <div>osmosis2020cust01@gmail.com- Customer Login</div>
+                                <div>osmosis2020dealer@gmail.com/Osmosis2020 - Dealer Login</div>
+                                <div>osmosis2020cust01@gmail.com/Osmosis2020- Customer Login</div>
                             </div>
                         </Grid>
                     </Grid>

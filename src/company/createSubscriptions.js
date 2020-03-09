@@ -11,7 +11,6 @@ import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { URL } from '../sharedComponents/constants';
-import { subscriptions, services, vehicles } from '../staticStore/storeData';
 
 export default class CreateSubscription extends React.Component {
 

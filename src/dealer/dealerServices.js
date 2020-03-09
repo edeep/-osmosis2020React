@@ -9,10 +9,10 @@ import MaterialTable from 'material-table';
 import Button from '@material-ui/core/Button';
 import { URL } from '../sharedComponents/constants';
 import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+
 import TextField from '@material-ui/core/TextField';
 
-export default class MyServices extends React.Component {
+export default class DealerServices extends React.Component {
 
     constructor(props) {
         super(props);
@@ -25,32 +25,31 @@ export default class MyServices extends React.Component {
             customervehiclesData: [],
             selectedVIN: '-1',
             customerComplaintsForService: '',
-            detailButtonclicked:'NA',
-            dealerListData: [],
-            serviceStationListData: [],
-            selectDealerId: '-1',
-            selectedServiceStationId: '-1'
+            detailButtonclicked:'NA'
 
 
         }
     }
 
     componentDidMount() {
-        this.getAllMyServices();
-        this.getAllDealers();
-        this.getAllServiceSattions();
+        this.getAllCustomerServices();
     }
 
     onChangeCustomerComplaints = (event)=> {
         this.setState({ customerComplaintsForService:event.target.value});
     }
 
-    getAllMyServices = () => {
+    getAllCustomerServices = () => {
+
+        //Wrong URL Needs to change
+        //let dealerId = localStorage.getItem('dealerId');
+        //dealerId = 1;
         let customerId = localStorage.getItem('customerId');
 
         //http://localhost:7081/owner-site/manufacturer/getAllServices
+       // let url = URL + 'dealer/searchAllCustomers/' + dealerId;
         let url = URL + 'customer/viewCustomerServices?customerId=' + customerId +
-        '&subscriptionId=-1' ;
+            '&subscriptionId=-1';
 
         return fetch(url)
             .then(response => {
@@ -79,74 +78,6 @@ export default class MyServices extends React.Component {
                 });
 
     }
-
-    getAllDealers = () => {
-       // let customerId = localStorage.getItem('customerId');
-
-        //http://localhost:7081/owner-site/manufacturer/getAllServices
-        let url = URL + 'dealer/getAllDealers';
-
-        return fetch(url)
-            .then(response => {
-                if (!response.ok) {
-
-                    throw Error(response.status);
-                }
-                return response;
-            })
-            .then(
-                response => {
-                    console.log('Came to Fetch Result ');
-
-                    if (response.status !== 200) {
-                        //this.setState({ dealerListData: [] });
-                        return;
-                    }
-                    response.json().then(data => {
-                        console.log('fetched data', data);
-                        this.setState({ dealerListData: data });
-                    });
-                })
-            .catch(
-                error => {
-                    console.log('Error ', error);
-                });
-
-    }
-
-    getAllServiceSattions = () => {
-        // let customerId = localStorage.getItem('customerId');
- 
-         //http://localhost:7081/owner-site/manufacturer/getAllServices
-         let url = URL + 'servicestation/getAllServiceStations';
- 
-         return fetch(url)
-             .then(response => {
-                 if (!response.ok) {
- 
-                     throw Error(response.status);
-                 }
-                 return response;
-             })
-             .then(
-                 response => {
-                     console.log('Came to Fetch Result ');
- 
-                     if (response.status !== 200) {
-                        // this.setState({ serviceStationListData: [] });
-                         return;
-                     }
-                     response.json().then(data => {
-                         console.log('fetched data', data);
-                         this.setState({ serviceStationListData: data });
-                     });
-                 })
-             .catch(
-                 error => {
-                     console.log('Error ', error);
-                 });
- 
-     }
 
     handleChange = panel => (event, isExpanded) => {
 
@@ -193,6 +124,7 @@ export default class MyServices extends React.Component {
     }
 
     populateDropDownValue = () => {
+
         return this.state.customervehiclesData.map((dt, i) => {
             return (
                 <MenuItem
@@ -205,34 +137,8 @@ export default class MyServices extends React.Component {
                 </MenuItem>
             );
         });
-    }
 
-    populateDealerDropDownValue = () => {
-        return this.state.dealerListData.map((dt, i) => {
-            return (
-                <MenuItem
-                    key={i}
-                    value={dt.dealerId}
-                    style={{ background: '#1976d2', color: 'white' }}
-                >
-                    {dt.firstname} - {dt.lastname}
-                </MenuItem>
-            );
-        });
-    }
 
-    populateServiceSattionDropDownValue = () => {
-        return this.state.serviceStationListData.map((dt, i) => {
-            return (
-                <MenuItem
-                    key={i}
-                    value={dt.serviceStationId}
-                    style={{ background: '#1976d2', color: 'white' }}
-                >
-                    {dt.firstname} - {dt.lastname}
-                </MenuItem>
-            );
-        });
     }
 
     handleChangeForVINSelect = event => {
@@ -242,29 +148,15 @@ export default class MyServices extends React.Component {
         
     };
 
-    handleChangeForDealerSelect = event => {
-        let selectDealerId = event.target.value;
-        
-        this.setState({ selectDealerId: selectDealerId });
-        
-    };
-
-    handleChangeForServiceSattionSelect = event => {
-        let selectedServiceStationId = event.target.value;
-        
-        this.setState({ selectedServiceStationId: selectedServiceStationId });
-        
-    };
-
-    displayDetailButton = (param) => {
+    displayStartService = (param) => {
         console.log(param);
         return (
             <Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
-                    this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked:'requestService' })
+                    this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked:'startService' })
                 }}>
-                Request Service
+                Start Service
                             </Button>);
 
     }
@@ -273,7 +165,7 @@ export default class MyServices extends React.Component {
 
     
     
-    displayTransferButton = (param) => {
+    displayUpdateService = (param) => {
         console.log(param);
         return (
             <Button variant="contained" data-sub={param} color="primary"
@@ -281,7 +173,7 @@ export default class MyServices extends React.Component {
                     console.log('onClick id is ', param.subscriptionId);
                     this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked: 'serviceHistory' })
                 }}>
-                View History
+                Track/Update Service
                             </Button>);
 
     }
@@ -308,20 +200,20 @@ export default class MyServices extends React.Component {
                         aria-controls="panel1bh-content"
                         id="panel1bh-header"
                     >
-                        <Typography>My Services </Typography>
+                        <Typography>Dealer Services -- Integration Pending </Typography>
 
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'block' }}>
 
                         <MaterialTable
                             style={{ width: '100%' }}
-                            title="My Services"
+                            title="Services"
                             columns={[
                                 { title: 'Service Name', field: 'servicename' },
                                 { title: 'Service Desc', field: 'servicedec' },
                                 { title: 'Status', field: 'subscriptionId', render: this.displayStatus },
-                                { title: 'Request Service', field: 'subscriptionId', render: this.displayDetailButton },
-                                { title: 'History', field: 'subscriptionId', render: this.displayTransferButton },
+                                { title: 'Start Service', field: 'subscriptionId', render: this.displayStartService },
+                                { title: 'Update Service', field: 'subscriptionId', render: this.displayUpdateService },
                                
 
                             ]}
@@ -355,56 +247,38 @@ export default class MyServices extends React.Component {
 
                         <div style={{ textAlign: 'left' }}>
                            
-                            {this.state.detailButtonclicked === 'requestService' ?
+                            {this.state.detailButtonclicked === 'startService' ?
                                 <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
-                                    <h3>Request Service</h3>
+                                    <h3>Start Service</h3>
                                     <div><b>Service Name:</b> {this.state.selectedServiceDetail.servicename}</div>
                                     <div><b>Service Desc:</b> {this.state.selectedServiceDetail.servicedec}</div>
-                            <div><b>Select Dealer:</b>
-                                <Select
-                                    label="Select Dealer"
-                                    id="selectDealer"
-                                    value={this.state.dealerListData}
-                                    onChange={this.handleChangeForDealerSelect}
-                                    style={{ fontSize: '14px', width: '400px' }}
-                                >
-
-                                    {this.populateDealerDropDownValue()}
-
-
-                                </Select>
+                            <div><b>Dealer Name:</b>
+                                
                             </div>
-                            <div><b>Select Service Station:</b>
-                                <Select
-                                    label="Select Service Station"
-                                    id="selectServiceStation"
-                                    value={this.state.serviceStationListData}
-                                    onChange={this.handleChangeForServiceSattionSelect}
-                                    style={{ fontSize: '14px', width: '400px' }}
-                                >
-
-                                    {this.populateServiceSattionDropDownValue()}
-
-
-                                </Select>
-                            </div>
-                            <div>
+                                    <div><b>Service Station Name:</b></div>
+                                    <div><b>Customer Name:</b></div>
+                                    
+                                    <div>
+                                        <b>Customer Service Complaints:</b>
                             <TextField
                              
                                     id="standard-error-helper-text"
-                                    label="Enter all your requests for the chosen service"
+                                   
                                     onChange={this.onChangeCustomerComplaints}
                                     value={this.state.customerComplaintsForService}
-                                    multiline
+                                            multiline
+                                            disabled
                                     rows="6"
-                                    style={{ width: '500px' }}
+                                            style={{ width: '500px' }}
+                                            variant="filled"
+                                          
                             />
                             </div>
                             &nbsp;
-                            <div>
+                                    <div>
                                 <Button variant="contained"  color="primary"
                                     >
-                                    Initate Service
+                                    Start Service
                             </Button>
                                 </div>
                             </div> : <div></div>}
@@ -417,6 +291,7 @@ export default class MyServices extends React.Component {
                                     <div><b>Service Desc:</b> {this.state.selectedServiceDetail.servicedec}</div>
                                     <div><b>Dealer Name:</b> {this.state.selectedServiceDetail.servicename}</div>
                                     <div><b>Service Station Name:</b> {this.state.selectedServiceDetail.servicedec}</div>
+                                    <div><b>Customer Name:</b></div>
                                     <div><b>Service Start Date:</b> </div>
                                     <div><b>Service Completed Date:</b> </div>
                                 
@@ -429,6 +304,7 @@ export default class MyServices extends React.Component {
                                             disabled 
                                             value={this.state.selectedServiceDetail.customerComplaintsForService}
                                             multiline
+                                            
                                             rows="6"
                                             style={{ width: '500px' }}
                                             
@@ -440,8 +316,8 @@ export default class MyServices extends React.Component {
                                         <TextField
 
                                             id="standard-error-helper-text"
-                                            variant="filled"
-                                            disabled
+                                          
+                                            
                                             value={this.state.selectedServiceDetail.customerComplaintsForService}
                                             multiline
                                             rows="6"
@@ -455,8 +331,8 @@ export default class MyServices extends React.Component {
                                         <TextField
 
                                             id="standard-error-helper-text"
-                                            variant="filled"
-                                            disabled
+                                          
+                                           
                                             value={this.state.selectedServiceDetail.customerComplaintsForService}
                                             multiline
                                             rows="6"
@@ -464,8 +340,32 @@ export default class MyServices extends React.Component {
 
                                         />
                                     </div>
-                                    <div><b>Total Service Cost:</b> </div>
-                            
+                                    <br></br>
+                                    <div><b>Total Service Cost:</b>
+                                        <TextField
+
+                                            id="standard-error-helper-text"
+
+
+                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                           
+                                            style={{ width: '100px' }}
+
+                                        /></div>
+                                    <br></br>
+                                    <div>
+                                        <Button variant="contained" color="primary"
+                                        >
+                                            Update Service
+                                         </Button>
+                                        
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        
+                                        <Button variant="contained" color="primary"
+                                        >
+                                            Complete Service
+                                         </Button>
+                                    </div>
                                 </div> :
                                 <div></div>
                             }

@@ -12,7 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import moment from 'moment';
 
-export default class MySubscriptions extends React.Component {
+export default class DealerSubscriptions extends React.Component {
 
     constructor(props) {
         super(props);
@@ -154,7 +154,7 @@ export default class MySubscriptions extends React.Component {
                     console.log('onClick id is ', param.subscriptionId);
                     this.setState({ expanded: 'panel2', selectedSubDetail: param, detailButtonClicked: 'cancel' });
                 }}>
-                Cancel
+                 Cancel
             </Button>);
 
     }
@@ -167,7 +167,7 @@ export default class MySubscriptions extends React.Component {
                     console.log('onClick id is ', param.subscriptionId);
                     this.setState({ expanded: 'panel2', selectedSubDetail: param, detailButtonClicked: 'refund' })
                 }}>
-                Refund
+                 Refund
             </Button>);
 
     }
@@ -298,25 +298,26 @@ export default class MySubscriptions extends React.Component {
                         aria-controls="panel1bh-content"
                         id="panel1bh-header"
                     >
-                        <Typography> Subscription Summary</Typography>
+                        <Typography> Subscription Summary - Integration Pending</Typography>
 
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'block' }}>
 
                         <MaterialTable
                             style={{ width: '100%' }}
-                            title="My Subscriptions"
+                            title="Customer Subscriptions"
                             columns={[
                                 { title: 'Subscription Name', field: 'subscriptionName' },
+                                { title: 'Customer Name', field: 'customerName' },
                                 { title: 'VIN', field: 'vin' },
                                 { title: 'Subscription Start', field: 'subscriptionStartDate', type: 'date' },
                                 { title: 'Subscription End', field: 'subscriptionEndDate', type: 'date' },
                                 { title: 'Price', field: 'subscriptionPrice' },
                                 { title: 'Status', field: 'subscriptionId', render: this.displayStatus },
                               
-                                { title: 'Transfer', field: 'subscriptionId', render: this.displayTranferButton },
-                                { title: 'Cancel', field: 'subscriptionId', render: this.displayCancelButton },
-                                { title: 'Refund', field: 'subscriptionId', render: this.displayRefundButton },
+                           
+                                { title: 'Approve Cancel', field: 'subscriptionId', render: this.displayCancelButton },
+                                { title: 'Approve Refund', field: 'subscriptionId', render: this.displayRefundButton },
 
 
                             ]}
@@ -404,7 +405,7 @@ export default class MySubscriptions extends React.Component {
                                     </p>
                                     <Button variant="contained" color="primary" onClick={this.cancelSubscription}
                                            >
-                                           Cancel </Button>
+                                           Approve  </Button>
                                 </div> : <div></div>}
                             
                             {this.state.detailButtonClicked === 'refund' ?
@@ -420,7 +421,7 @@ export default class MySubscriptions extends React.Component {
                                     </p>
                                     <Button variant="contained" color="primary"
                                         >
-                                        Refund </Button>
+                                        Approve </Button>
                                 </div> : <div></div>}
                         </div>
 

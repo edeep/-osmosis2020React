@@ -8,7 +8,7 @@ import {
 } from './utils';
 import Button from '@material-ui/core/Button';
 
-import styles from './paymentStyles.css';
+//import styles from './paymentStyles.css';
 
 import 'react-credit-cards/es/styles-compiled.css';
 
@@ -49,7 +49,7 @@ export default class PaymentForm extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        const { issuer } = this.state;
+       // const { issuer } = this.state;
         const formData = [...e.target.elements]
             .filter(d => d.name)
             .reduce((acc, d) => {

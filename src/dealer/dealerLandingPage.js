@@ -2,6 +2,8 @@ import React from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
+import DealerServices from './dealerServices';
+import DealerSubscription from './dealerSubscriptions';
 
 export default class DealerLandingPage extends React.Component {
 
@@ -12,11 +14,23 @@ export default class DealerLandingPage extends React.Component {
         }
     }
 
-
+    displaySelectedTab = (param) => {
+        switch (param) {
+            case 0:
+                return <DealerServices />
+            case 1:
+                return <DealerSubscription />
+            case 2:
+                return <DealerServices />
+            default:
+                return <DealerServices />
+        }
+    }
 
     handleChange = (event, newValue) => {
         console.log('event', event);
         console.log('newValue', newValue);
+        this.setState({ value: newValue });
 
     };
 
@@ -31,11 +45,12 @@ export default class DealerLandingPage extends React.Component {
                     textColor="primary"
                     aria-label="icon tabs example"
                 >
-                    
-                    <Tab label="Subscriptions"
+                   
+                    <Tab label="Services"
 
                     />
-                    <Tab label="Services"
+
+                    <Tab label="Subscriptions"
 
                     />
                     <Tab label="Enquiry"
@@ -44,6 +59,7 @@ export default class DealerLandingPage extends React.Component {
                     
                 </Tabs>
             </Paper>
+            {this.displaySelectedTab(this.state.value)}
         </div>);
     }
 }
