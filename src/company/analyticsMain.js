@@ -62,6 +62,9 @@ export default class AnalyticsMain extends React.Component {
         this.setState(state => {
             let updatedState = { ...state };
             updatedState.highChartOption = {
+                chart: {
+                    type: 'line'
+                },
                 title: {
                     text: 'Number of Montly Subscriptions'
                 },
@@ -73,6 +76,14 @@ export default class AnalyticsMain extends React.Component {
                     title: {
                         text: 'Number of Subscriptions'
                     }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
                 },
                 series: data.data
             };
@@ -103,7 +114,7 @@ export default class AnalyticsMain extends React.Component {
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                        '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
                     footerFormat: '</table>',
                     shared: true,
                     useHTML: true
