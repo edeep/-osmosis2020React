@@ -25,7 +25,11 @@ export default class MyServices extends React.Component {
             customervehiclesData: [],
             selectedVIN: '-1',
             customerComplaintsForService: '',
-            detailButtonclicked:'NA'
+            detailButtonclicked:'NA',
+            dealerListData: [],
+            serviceStationListData: [],
+            selectDealerId: '-1',
+            selectedServiceStationId: '-1'
 
 
         }
@@ -33,6 +37,8 @@ export default class MyServices extends React.Component {
 
     componentDidMount() {
         this.getAllMyServices();
+        this.getAllDealers();
+        this.getAllServiceSattions();
     }
 
     onChangeCustomerComplaints = (event)=> {
@@ -73,6 +79,74 @@ export default class MyServices extends React.Component {
                 });
 
     }
+
+    getAllDealers = () => {
+       // let customerId = localStorage.getItem('customerId');
+
+        //http://localhost:7081/owner-site/manufacturer/getAllServices
+        let url = URL + 'dealer/getAllDealers';
+
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+
+                    if (response.status !== 200) {
+                        //this.setState({ dealerListData: [] });
+                        return;
+                    }
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        this.setState({ dealerListData: data });
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+    }
+
+    getAllServiceSattions = () => {
+        // let customerId = localStorage.getItem('customerId');
+ 
+         //http://localhost:7081/owner-site/manufacturer/getAllServices
+         let url = URL + 'servicestation/getAllServiceStations';
+ 
+         return fetch(url)
+             .then(response => {
+                 if (!response.ok) {
+ 
+                     throw Error(response.status);
+                 }
+                 return response;
+             })
+             .then(
+                 response => {
+                     console.log('Came to Fetch Result ');
+ 
+                     if (response.status !== 200) {
+                        // this.setState({ serviceStationListData: [] });
+                         return;
+                     }
+                     response.json().then(data => {
+                         console.log('fetched data', data);
+                         this.setState({ serviceStationListData: data });
+                     });
+                 })
+             .catch(
+                 error => {
+                     console.log('Error ', error);
+                 });
+ 
+     }
 
     handleChange = panel => (event, isExpanded) => {
 
@@ -119,7 +193,6 @@ export default class MyServices extends React.Component {
     }
 
     populateDropDownValue = () => {
-
         return this.state.customervehiclesData.map((dt, i) => {
             return (
                 <MenuItem
@@ -132,14 +205,54 @@ export default class MyServices extends React.Component {
                 </MenuItem>
             );
         });
+    }
 
+    populateDealerDropDownValue = () => {
+        return this.state.dealerListData.map((dt, i) => {
+            return (
+                <MenuItem
+                    key={i}
+                    value={dt.dealerId}
+                    style={{ background: '#1976d2', color: 'white' }}
+                >
+                    {dt.firstname} - {dt.lastname}
+                </MenuItem>
+            );
+        });
+    }
 
+    populateServiceSattionDropDownValue = () => {
+        return this.state.serviceStationListData.map((dt, i) => {
+            return (
+                <MenuItem
+                    key={i}
+                    value={dt.serviceStationId}
+                    style={{ background: '#1976d2', color: 'white' }}
+                >
+                    {dt.firstname} - {dt.lastname}
+                </MenuItem>
+            );
+        });
     }
 
     handleChangeForVINSelect = event => {
         let selectedVIN = event.target.value;
         
         this.setState({ selectedVIN: selectedVIN });
+        
+    };
+
+    handleChangeForDealerSelect = event => {
+        let selectDealerId = event.target.value;
+        
+        this.setState({ selectDealerId: selectDealerId });
+        
+    };
+
+    handleChangeForServiceSattionSelect = event => {
+        let selectedServiceStationId = event.target.value;
+        
+        this.setState({ selectedServiceStationId: selectedServiceStationId });
         
     };
 
@@ -250,13 +363,13 @@ export default class MyServices extends React.Component {
                             <div><b>Select Dealer:</b>
                                 <Select
                                     label="Select Dealer"
-                                    id="selectVIN"
-                                    value={this.state.selectedVIN}
-                                    onChange={this.handleChangeForVINSelect}
+                                    id="selectDealer"
+                                    value={this.state.dealerListData}
+                                    onChange={this.handleChangeForDealerSelect}
                                     style={{ fontSize: '14px', width: '400px' }}
                                 >
 
-                                    {this.populateDropDownValue()}
+                                    {this.populateDealerDropDownValue()}
 
 
                                 </Select>
@@ -264,13 +377,13 @@ export default class MyServices extends React.Component {
                             <div><b>Select Service Station:</b>
                                 <Select
                                     label="Select Service Station"
-                                    id="selectVIN"
-                                    value={this.state.selectedVIN}
-                                    onChange={this.handleChangeForVINSelect}
+                                    id="selectServiceStation"
+                                    value={this.state.serviceStationListData}
+                                    onChange={this.handleChangeForServiceSattionSelect}
                                     style={{ fontSize: '14px', width: '400px' }}
                                 >
 
-                                    {this.populateDropDownValue()}
+                                    {this.populateServiceSattionDropDownValue()}
 
 
                                 </Select>
