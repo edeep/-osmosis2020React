@@ -13,7 +13,7 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 
-export default class MyEnquiry extends React.Component {
+export default class ManufacturerEnquiry extends React.Component {
 
     constructor(props) {
         super(props);
@@ -38,7 +38,7 @@ export default class MyEnquiry extends React.Component {
 
     componentDidMount() {
         this.getAllMyEnquiry();
-        this.getAllDealers();
+        //this.getAllDealers();
        
     }
 
@@ -47,10 +47,10 @@ export default class MyEnquiry extends React.Component {
     }
 
     getAllMyEnquiry = () => {
-        let customerId = localStorage.getItem('customerId');
+     
 
         //http://localhost:7081/owner-site/manufacturer/getAllServices
-        let url = URL + 'customer/getAllEnquiriesForCustomerId?customerId=' + customerId ;
+        let url = URL + 'customer/getAllEnquiriesForManufacturer';
 
         return fetch(url)
             .then(response => {
@@ -72,40 +72,6 @@ export default class MyEnquiry extends React.Component {
                         console.log('fetched data', data);
                         this.setState({ enQuiryDataForCustomer: data });
                         
-                    });
-                })
-            .catch(
-                error => {
-                    console.log('Error ', error);
-                });
-
-    }
-
-    getAllDealers = () => {
-       // let customerId = localStorage.getItem('customerId');
-
-        //http://localhost:7081/owner-site/manufacturer/getAllServices
-        let url = URL + 'dealer/getAllDealers';
-
-        return fetch(url)
-            .then(response => {
-                if (!response.ok) {
-
-                    throw Error(response.status);
-                }
-                return response;
-            })
-            .then(
-                response => {
-                    console.log('Came to Fetch Result ');
-
-                    if (response.status !== 200) {
-                        //this.setState({ dealerListData: [] });
-                        return;
-                    }
-                    response.json().then(data => {
-                        console.log('fetched data', data);
-                        this.setState({ dealerListData: data });
                     });
                 })
             .catch(
@@ -307,8 +273,7 @@ export default class MyEnquiry extends React.Component {
                             {this.state.detailButtonclicked === 'requestService' ?
                                 <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
                                     <h3>Enquire</h3>
-                                    <p> Enquiry are by Default sent to manufacturer. Select Dealer below
-                                if you need to contact Dealer</p>        
+                                    
                             <div><b>Select Dealer:</b>
                                 <Select
                                     label="Select Dealer"

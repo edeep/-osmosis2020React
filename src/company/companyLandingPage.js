@@ -5,13 +5,14 @@ import Paper from '@material-ui/core/Paper';
 import CreateService from './createServices';
 import CreateSubscription from './createSubscriptions';
 import AnalyticsMain from './analyticsMain';
+import ManfacturerEnquiry from './manufacturerEnquiry';
 
 export default class CompanyLandingPage extends React.Component{
 
     constructor(props) {
         super(props);
         this.state = {
-            value: 1
+            value: 4
         }
     }
 
@@ -29,6 +30,8 @@ export default class CompanyLandingPage extends React.Component{
                 return <CreateService />
             case 2:
                 return <CreateSubscription />
+            case 4:
+                return <ManfacturerEnquiry />
             default:
                 return <AnalyticsMain  />
         }
@@ -55,10 +58,10 @@ export default class CompanyLandingPage extends React.Component{
                     <Tab label="Create Subscriptions"
 
                     />
+                    
                     <Tab label="RDR "
 
                     />
-                  
                     
                     <Tab label="Customer Enquiry"
 

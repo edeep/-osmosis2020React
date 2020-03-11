@@ -13,7 +13,7 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 
-export default class MyEnquiry extends React.Component {
+export default class DealerEnquiry extends React.Component {
 
     constructor(props) {
         super(props);
@@ -30,7 +30,8 @@ export default class MyEnquiry extends React.Component {
             dealerListData: [],
             serviceStationListData: [],
             selectDealerId: '-1',
-            selectedServiceStationId: '-1'
+            selectedServiceStationId: '-1',
+            enquiryAnswer:''
 
 
         }
@@ -38,19 +39,21 @@ export default class MyEnquiry extends React.Component {
 
     componentDidMount() {
         this.getAllMyEnquiry();
-        this.getAllDealers();
+        //this.getAllDealers();
        
     }
 
-    onChangeEnquiryQuestion = (event)=> {
-        this.setState({ enquiryQuestion:event.target.value});
+    onChangeEnquiryAnswer = (event) => {
+       // let selectedServiceDetailLocal = [...this.state.selectedServiceDetail];
+    
+        this.setState({ enquiryAnswer: event.target.value});
     }
 
     getAllMyEnquiry = () => {
-        let customerId = localStorage.getItem('customerId');
+     
 
         //http://localhost:7081/owner-site/manufacturer/getAllServices
-        let url = URL + 'customer/getAllEnquiriesForCustomerId?customerId=' + customerId ;
+        let url = URL + 'customer/getAllEnquiriesForDealerId?dealerId=1';
 
         return fetch(url)
             .then(response => {
@@ -81,64 +84,26 @@ export default class MyEnquiry extends React.Component {
 
     }
 
-    getAllDealers = () => {
-       // let customerId = localStorage.getItem('customerId');
-
-        //http://localhost:7081/owner-site/manufacturer/getAllServices
-        let url = URL + 'dealer/getAllDealers';
-
-        return fetch(url)
-            .then(response => {
-                if (!response.ok) {
-
-                    throw Error(response.status);
-                }
-                return response;
-            })
-            .then(
-                response => {
-                    console.log('Came to Fetch Result ');
-
-                    if (response.status !== 200) {
-                        //this.setState({ dealerListData: [] });
-                        return;
-                    }
-                    response.json().then(data => {
-                        console.log('fetched data', data);
-                        this.setState({ dealerListData: data });
-                    });
-                })
-            .catch(
-                error => {
-                    console.log('Error ', error);
-                });
-
-    }
 
 
-
-    sendEnquiry = () => {
+    replyEnquiry = () => {
       
-       
-        let enquiry_created_date = moment().format('DD/MM/YYYY');;
-       
-        let enquiry_question = this.state.enquiryQuestion;
-       
-        let customerId = localStorage.getItem('customerId');
-        let dealerId = this.state.selectDealerId;
+        let data = this.state.selectedServiceDetail;
+        data.enquiryResolvedDate = moment().format('DD/MM/YYYY');
+        data.enquiryAnswer = this.state.enquiryAnswer;
+
+        
 
         let options = {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
-            }
+            },
+            body: JSON.stringify(data)
 
         };
 
-        let url = URL + 'customer/addCustomerEnquiry?customerId=' + customerId +
-            '&dealerId=' + dealerId + '&enquiry_question=' + enquiry_question
-            + '&enquiry_created_date=' + enquiry_created_date 
-            +'&enquiry_answer=NA&enquiry_resolved_date=NA';
+        let url = URL + 'customer/updateEnquiry';
 
         return fetch(url, options)
             .then(response => {
@@ -162,6 +127,8 @@ export default class MyEnquiry extends React.Component {
                 error => {
                     console.log('Error ', error);
                 });
+
+                
 
     }
    
@@ -220,7 +187,7 @@ export default class MyEnquiry extends React.Component {
                     console.log('onClick id is ', param.subscriptionId);
                     this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked: 'serviceHistory' })
                 }}>
-                View History
+                View 
                             </Button>);
 
     }
@@ -236,7 +203,7 @@ export default class MyEnquiry extends React.Component {
 
     }
 
-
+ 
     render() {
         return (
             <div >
@@ -252,18 +219,12 @@ export default class MyEnquiry extends React.Component {
 
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'block' }}>
-                        <Button variant="contained"  color="primary"
-                            onClick={() => {
-                               
-                                this.setState({ expanded: 'panel2',  detailButtonclicked: 'requestService' })
-                            }}>
-                           New Enquiry
-                            </Button>
+                        
                         <MaterialTable
                             style={{ width: '100%' }}
                             title="My Enquiry"
                             columns={[
-                                { title: 'Enquired To', field: 'dealerName' },
+                             
                                 { title: 'Enquiry Date', field: 'enquiryCreatedDate' },
                                 { title: 'Enquiry Question', field: 'enquiryQuestion' },
                                 { title: 'Enquiry Resolved Date', field: 'enquiryResolvedDate' },
@@ -304,46 +265,7 @@ export default class MyEnquiry extends React.Component {
 
                         <div style={{ textAlign: 'left' }}>
                            
-                            {this.state.detailButtonclicked === 'requestService' ?
-                                <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
-                                    <h3>Enquire</h3>
-                                    <p> Enquiry are by Default sent to manufacturer. Select Dealer below
-                                if you need to contact Dealer</p>        
-                            <div><b>Select Dealer:</b>
-                                <Select
-                                    label="Select Dealer"
-                                    id="selectDealer"
-                                    value={this.state.selectDealerId}
-                                    onChange={this.handleChangeForDealerSelect}
-                                    style={{ fontSize: '14px', width: '400px' }}
-                                >
-
-                                    {this.populateDealerDropDownValue()}
-
-
-                                </Select>
-                            </div>
-                           
-                            <div>
-                            <TextField
-                             
-                                    id="standard-error-helper-text"
-                                    label="Add your Enquiry"
-                                    onChange={this.onChangeEnquiryQuestion}
-                                    value={this.state.enquiryQuestion}
-                                    multiline
-                                    rows="6"
-                                    style={{ width: '500px' }}
-                            />
-                            </div>
-                            &nbsp;
-                            <div>
-                                        <Button variant="contained" color="primary" onClick={this.sendEnquiry}
-                                    >
-                                    Send Enquiry
-                            </Button>
-                                </div>
-                            </div> : <div></div>}
+                            
                             
                             {this.state.detailButtonclicked === 'serviceHistory' ?
                                 <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
@@ -370,12 +292,11 @@ export default class MyEnquiry extends React.Component {
                                     </div>
                                     <br></br>
                                     <div>
-                                        <span><b>Enquiry Comments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></span>
+                                        <span><b>Enquiry Comments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></span>
                                         <TextField
 
                                             id="standard-error-helper-text"
-                                            variant="filled"
-                                            disabled
+                                            onChange={this.onChangeEnquiryAnswer}
                                             value={this.state.selectedServiceDetail.enquiryAnswer}
                                             multiline
                                             rows="6"
@@ -384,6 +305,12 @@ export default class MyEnquiry extends React.Component {
                                         />
                                     </div>
                                     <br></br>
+                                    <div>
+                                        <Button variant="contained" color="primary" onClick={this.replyEnquiry}
+                                        >
+                                            Reply
+                                        </Button>
+                                    </div>
                                    
                             
                                 </div> :

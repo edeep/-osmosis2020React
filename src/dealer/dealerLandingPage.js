@@ -4,13 +4,14 @@ import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 import DealerServices from './dealerServices';
 import DealerSubscription from './dealerSubscriptions';
+import DealerEnquiry from './dealerEnquiry';
 
 export default class DealerLandingPage extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            value: 0
+            value: 2
         }
     }
 
@@ -21,7 +22,7 @@ export default class DealerLandingPage extends React.Component {
             case 1:
                 return <DealerSubscription />
             case 2:
-                return <DealerServices />
+                return <DealerEnquiry />
             default:
                 return <DealerServices />
         }
