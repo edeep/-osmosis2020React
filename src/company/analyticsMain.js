@@ -15,6 +15,7 @@ export default class AnalyticsMain extends React.Component {
             reportURLS: {
                 monthlySubcriptions: 'manufacturer/monthlySubscriptionsReport',
                 monthlySubcriptionsPerSubscription: 'manufacturer/monthlySubscriptionsPerSubscriptionReport',
+                subscriptions: 'manufacturer/subscriptionsReport',
                 select: null
             }
         }
@@ -52,6 +53,8 @@ export default class AnalyticsMain extends React.Component {
                             this.getMonthlySubscribers(data, chartSelected);
                         } else if (chartSelected === 'monthlySubcriptionsPerSubscription') {
                             this.getMonthlySubscribersBySubscription(data, chartSelected);
+                        } else if (chartSelected === 'subscriptions') {
+                            this.getSubscriptions(data, chartSelected);
                         }
                     });
                 })
@@ -66,7 +69,7 @@ export default class AnalyticsMain extends React.Component {
                     type: 'line'
                 },
                 title: {
-                    text: 'Number of Montly Subscriptions'
+                    text: 'Number of Monthly Subscriptions'
                 },
                 xAxis: {
                     categories: data.categories
@@ -75,7 +78,8 @@ export default class AnalyticsMain extends React.Component {
                     min: 0,
                     title: {
                         text: 'Number of Subscriptions'
-                    }
+                    },
+                    allowDecimals: false
                 },
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
@@ -100,7 +104,7 @@ export default class AnalyticsMain extends React.Component {
                     type: 'column'
                 },
                 title: {
-                    text: 'Number of Montly Subscriptions by Subscription'
+                    text: 'Number of Monthly Subscriptions by Subscription'
                 },
                 xAxis: {
                     categories: data.categories
@@ -132,6 +136,48 @@ export default class AnalyticsMain extends React.Component {
         });
     }
 
+    getSubscriptions = (data, chartSelected) => {
+        this.setState(state => {
+            let updatedState = { ...state };
+            updatedState.highChartOption = {
+                chart: {
+                    type: 'bar'
+                },
+                title: {
+                    text: 'Subscriptions'
+                },
+                xAxis: {
+                    categories: data.categories,
+                    title: {
+                        text: 'Subscription Name'
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Number of Subscriptions'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: data.data
+            };
+            updatedState.chartSelected = chartSelected;
+            return updatedState;
+        });
+    }
 
     render() {
         return (
@@ -140,8 +186,9 @@ export default class AnalyticsMain extends React.Component {
                 <form>
                     <select value={this.state.chartSelected} onChange={this.onChartSelection}>
                         <option value="select">Select</option>
-                        <option value="monthlySubcriptions">Number of Montly Subscriptions</option>
-                        <option value="monthlySubcriptionsPerSubscription">Number of Montly Subscriptions by Subscription</option>
+                        <option value="subscriptions">Subscriptions</option>
+                        <option value="monthlySubcriptions">Number of Monthly Subscriptions</option>
+                        <option value="monthlySubcriptionsPerSubscription">Number of Monthly Subscriptions by Subscription</option>
                     </select>
                 </form>
 
