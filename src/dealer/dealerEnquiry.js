@@ -105,7 +105,7 @@ export default class DealerEnquiry extends React.Component {
 
         let url = URL + 'customer/updateEnquiry';
 
-        return fetch(url, options)
+       return fetch(url, options)
             .then(response => {
                 if (!response.ok) {
 
@@ -127,6 +127,7 @@ export default class DealerEnquiry extends React.Component {
                 error => {
                     console.log('Error ', error);
                 });
+                
 
                 
 

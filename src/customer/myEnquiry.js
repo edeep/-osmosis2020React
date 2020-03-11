@@ -26,7 +26,7 @@ export default class MyEnquiry extends React.Component {
             customervehiclesData: [],
             selectedVIN: '-1',
             enquiryQuestion: '',
-            detailButtonclicked:'NA',
+            detailButtonclicked: 'NA',
             dealerListData: [],
             serviceStationListData: [],
             selectDealerId: '-1',
@@ -42,15 +42,15 @@ export default class MyEnquiry extends React.Component {
        
     }
 
-    onChangeEnquiryQuestion = (event)=> {
-        this.setState({ enquiryQuestion:event.target.value});
+    onChangeEnquiryQuestion = (event) => {
+        this.setState({ enquiryQuestion: event.target.value });
     }
 
     getAllMyEnquiry = () => {
         let customerId = localStorage.getItem('customerId');
 
         //http://localhost:7081/owner-site/manufacturer/getAllServices
-        let url = URL + 'customer/getAllEnquiriesForCustomerId?customerId=' + customerId ;
+        let url = URL + 'customer/getAllEnquiriesForCustomerId?customerId=' + customerId;
 
         return fetch(url)
             .then(response => {
@@ -82,7 +82,7 @@ export default class MyEnquiry extends React.Component {
     }
 
     getAllDealers = () => {
-       // let customerId = localStorage.getItem('customerId');
+        // let customerId = localStorage.getItem('customerId');
 
         //http://localhost:7081/owner-site/manufacturer/getAllServices
         let url = URL + 'dealer/getAllDealers';
@@ -137,8 +137,8 @@ export default class MyEnquiry extends React.Component {
 
         let url = URL + 'customer/addCustomerEnquiry?customerId=' + customerId +
             '&dealerId=' + dealerId + '&enquiry_question=' + enquiry_question
-            + '&enquiry_created_date=' + enquiry_created_date 
-            +'&enquiry_answer=NA&enquiry_resolved_date=NA';
+            + '&enquiry_created_date=' + enquiry_created_date
+            + '&enquiry_answer=NA&enquiry_resolved_date=NA';
 
         return fetch(url, options)
             .then(response => {
@@ -211,6 +211,15 @@ export default class MyEnquiry extends React.Component {
         
     };
 
+    displayEnquirerName =   (param) => {
+        return (
+            <div>
+                {param.dealerId && param.dealerId > 0 ? <div>
+                    {param.dealerFirstName + ' ' + param.dealerLastName}
+                </div>:'Manufacturer'}
+            </div>
+        )
+    }
     
     displayTransferButton = (param) => {
         console.log(param);
@@ -263,7 +272,7 @@ export default class MyEnquiry extends React.Component {
                             style={{ width: '100%' }}
                             title="My Enquiry"
                             columns={[
-                                { title: 'Enquired To', field: 'dealerName' },
+                                { title: 'Enquired To', render: this.displayEnquirerName },
                                 { title: 'Enquiry Date', field: 'enquiryCreatedDate' },
                                 { title: 'Enquiry Question', field: 'enquiryQuestion' },
                                 { title: 'Enquiry Resolved Date', field: 'enquiryResolvedDate' },
@@ -316,7 +325,14 @@ export default class MyEnquiry extends React.Component {
                                     value={this.state.selectDealerId}
                                     onChange={this.handleChangeForDealerSelect}
                                     style={{ fontSize: '14px', width: '400px' }}
-                                >
+                                        >
+                                            <MenuItem
+                                                key={-1}
+                                                value={-1}
+                                                style={{ background: '#1976d2', color: 'white' }}
+                                            >
+                                               Select Dealer
+                                            </MenuItem>
 
                                     {this.populateDealerDropDownValue()}
 
