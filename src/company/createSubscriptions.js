@@ -433,6 +433,16 @@ export default class CreateSubscription extends React.Component {
         
     }
 
+    avaliableSeasonsLookup = () => {
+        let availableSeasons = {};
+        availableSeasons[0] = 'Winter';
+        availableSeasons[1] = 'Spring';
+        availableSeasons[2] = 'Summer';
+        availableSeasons[3] = 'Fall';
+
+        return availableSeasons;
+    }
+
    
     render() {
         return (
@@ -456,6 +466,7 @@ export default class CreateSubscription extends React.Component {
                                 { title: 'Subscription Desc', field: 'subscriptionDesc' },
                                 { title: 'Subscription Start', field: 'subscriptionStartDate', type: 'date' },
                                 { title: 'Subscription End', field: 'subscriptionEndDate', type: 'date' },
+                                { title: 'Season', field: 'season', lookup: this.avaliableSeasonsLookup()},
                                 { title: 'Price', field: 'subscriptionPrice' },
                                 { title: 'Detail', field: 'subscriptionId', editable:false, render: this.displayDetailButton },
 

@@ -12,7 +12,7 @@ export default class CompanyLandingPage extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            value: 4
+            value: 1
         }
     }
 
