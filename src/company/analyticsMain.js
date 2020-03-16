@@ -16,6 +16,7 @@ export default class AnalyticsMain extends React.Component {
                 monthlySubcriptions: 'manufacturer/monthlySubscriptionsReport',
                 monthlySubcriptionsPerSubscription: 'manufacturer/monthlySubscriptionsPerSubscriptionReport',
                 subscriptions: 'manufacturer/subscriptionsReport',
+                rdrReport: 'manufacturer/rdrReport',
                 select: null
             }
         }
@@ -55,6 +56,8 @@ export default class AnalyticsMain extends React.Component {
                             this.getMonthlySubscribersBySubscription(data, chartSelected);
                         } else if (chartSelected === 'subscriptions') {
                             this.getSubscriptions(data, chartSelected);
+                        } else if (chartSelected === 'rdrReport') {
+                            this.getRDRReport(data, chartSelected);
                         }
                     });
                 })
@@ -179,6 +182,41 @@ export default class AnalyticsMain extends React.Component {
         });
     }
 
+    getRDRReport = (data, chartSelected) => {
+        this.setState(state => {
+            let updatedState = { ...state };
+            updatedState.highChartOption = {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'RDR Report'
+                },
+                xAxis: {
+                    categories: data.categories
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Average number of days difference between RDR submitted by Customer and Dealer'
+                    },
+                    allowDecimals: false
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                series: data.data
+            };
+            updatedState.chartSelected = chartSelected;
+            return updatedState;
+        });
+    }
+
     render() {
         return (
             <div>
@@ -189,6 +227,7 @@ export default class AnalyticsMain extends React.Component {
                         <option value="subscriptions">Subscriptions</option>
                         <option value="monthlySubcriptions">Number of Monthly Subscriptions</option>
                         <option value="monthlySubcriptionsPerSubscription">Number of Monthly Subscriptions by Subscription</option>
+                        <option value="rdrReport">RDR Report</option>
                     </select>
                 </form>
 
