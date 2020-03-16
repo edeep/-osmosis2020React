@@ -364,7 +364,7 @@ export default class MyServices extends React.Component {
                                 <Select
                                     label="Select Dealer"
                                     id="selectDealer"
-                                    value={this.state.dealerListData}
+                                    value={this.state.selectDealerId}
                                     onChange={this.handleChangeForDealerSelect}
                                     style={{ fontSize: '14px', width: '400px' }}
                                 >
@@ -378,7 +378,7 @@ export default class MyServices extends React.Component {
                                 <Select
                                     label="Select Service Station"
                                     id="selectServiceStation"
-                                    value={this.state.serviceStationListData}
+                                    value={this.state.selectedServiceStationId}
                                     onChange={this.handleChangeForServiceSattionSelect}
                                     style={{ fontSize: '14px', width: '400px' }}
                                 >
