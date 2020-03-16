@@ -16,6 +16,8 @@ export default class LoginComponent extends React.Component {
      responseGoogleOnSucess = (response) => {
          console.log(response);
          this.setState({ userLoggedIn: true, userMessage: response.profileObj.name });
+         localStorage.clear();
+        
          let role = 'otherRole';
          if (response.profileObj.email === 'osmosis2020manu@gmail.com')
          {
@@ -24,7 +26,11 @@ export default class LoginComponent extends React.Component {
              role = 'dealer';
          } else if (response.profileObj.email === 'osmosis2020cust01@gmail.com') {
              role = 'cust';
-         }    
+             localStorage.setItem('customerId', 1);
+         } else if (response.profileObj.email === 'osmosis2020cust02@gmail.com') {
+             role = 'cust';
+             localStorage.setItem('customerId', 2);
+         }      
          this.props.isAuthorized(true, role);
     }
 

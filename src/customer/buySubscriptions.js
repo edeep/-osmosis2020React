@@ -27,8 +27,8 @@ export default class BuySubscriptions extends React.Component {
             vehicleData: [],
             selectedDate: new Date(),
           
-            buyStatusInfo: '',
-            month: this.getMonthForSeason()
+            buyStatusInfo: ''
+          
         }
     }
 
@@ -231,21 +231,23 @@ export default class BuySubscriptions extends React.Component {
                             console.log('fetched data', data);
                             let dataFilteredAfterSeason = [];
 
+
                             let month = moment().month() + 1;
                             console.log('Month is >> ', month)
                             let eligibleMonthInDropDown = '0';
                             if (month > 2 && month < 6) {
-                                eligibleMonthInDropDown = '1';
-                            } else if (month > 5 && month < 9) {
                                 eligibleMonthInDropDown = '2';
-                            } else if (month > 8 && month < 12) {
+                            } else if (month > 5 && month < 9) {
                                 eligibleMonthInDropDown = '3';
+                            } else if (month > 8 && month < 12) {
+                                eligibleMonthInDropDown = '4';
                             } else {
-                                eligibleMonthInDropDown = '0';
+                                eligibleMonthInDropDown = '1';
                             }
 
                             data.forEach((eachData, index) => {
-                                if (eachData.season === eligibleMonthInDropDown) {
+                                if (eachData.season === '0' ||
+                                    eachData.season === eligibleMonthInDropDown) {
                                     dataFilteredAfterSeason.push(eachData)
                                 }
                             })
@@ -292,36 +294,14 @@ export default class BuySubscriptions extends React.Component {
 
     }
 
-    getMonthForSeason = () => {
-
-        let month = moment().month() + 1;
-        console.log('Month is >> ', month)
-        let eligibleMonthInDropDown = 0;
-        if (month > 2 && month < 6) {
-            eligibleMonthInDropDown = 1;
-        } else if (month > 5 && month < 9) {
-            eligibleMonthInDropDown = 2;
-        } else if (month > 8 && month < 12) {
-            eligibleMonthInDropDown = 3;
-        } else {
-            eligibleMonthInDropDown = 0
-        }
-
-        //Spring - 3 to 5
-        //Summer - 6 to 8
-        //Fall - 9 to 11
-        //Winter - 11 to 2
-
-        return month;
-        
-    }
 
     avaliableSeasonsLookup = () => {
         let availableSeasons = {};
-        availableSeasons[0] = 'Winter';
-        availableSeasons[1] = 'Spring';
-        availableSeasons[2] = 'Summer';
-        availableSeasons[3] = 'Fall';
+        availableSeasons[0] = 'All';
+        availableSeasons[1] = 'Winter';
+        availableSeasons[2] = 'Spring';
+        availableSeasons[3] = 'Summer';
+        availableSeasons[4] = 'Fall';
 
         return availableSeasons;
     }
