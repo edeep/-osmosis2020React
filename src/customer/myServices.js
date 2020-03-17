@@ -36,10 +36,26 @@ export default class MyServices extends React.Component {
         }
     }
 
+    displayVehicles = (vehicleData) => {
+        return (
+
+            vehicleData.map((eachvehicleData, index) => {
+                return (
+                    <div key={index} >
+                        {eachvehicleData.make + ' ' + eachvehicleData.model + ' ' + eachvehicleData.year}
+
+
+                    </div>
+                );
+            })
+
+        );
+    }
     componentDidMount() {
         this.getAllMyServices();
         this.getAllDealers();
         this.getAllServiceSattions();
+        this.getMyVehicles();
     }
 
     onChangeCustomerComplaints = (event)=> {
@@ -56,6 +72,7 @@ export default class MyServices extends React.Component {
         let customerId = localStorage.getItem('customerId');
         let dealerId = this.state.selectDealerId;
         let serviceId = this.state.selectedServiceDetail.serviceId;
+        let vin = this.state.selectedVIN;
 
         let options = {
             method: 'POST',
@@ -66,7 +83,7 @@ export default class MyServices extends React.Component {
         };
 
         let url = URL + 'customer/requestService?customerId=' + customerId +
-            '&serviceId=' + serviceId + '&vin=-1'+
+            '&serviceId=' + serviceId + '&vin=' + vin+
             '&dealerId=' + dealerId + '&complaints=' + complaints;
 
         return fetch(url, options)
@@ -128,6 +145,55 @@ export default class MyServices extends React.Component {
                 });
 
     }
+
+    getMyVehicles = () => {
+
+        let customerId = localStorage.getItem('customerId');
+        //http://localhost:7081/owner-site/customer/getMyVehicles?customerId=1
+
+        let url = URL + 'customer/getMyVehicles?customerId=' + customerId;
+
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+
+                    if (response.status !== 200) {
+                        this.setState({ customervehiclesData: [] });
+                        return;
+                    }
+
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        let totalVehicles = data.length;
+                        let noOfvehiclesWithRDRDate = 0;
+                        let showRDRMessage = true;
+                        data.forEach((eachData, index) => {
+                            if (eachData.rdrRegisteredDate) {
+                                noOfvehiclesWithRDRDate = noOfvehiclesWithRDRDate + 1;
+                            }
+
+                        })
+                        if (totalVehicles === noOfvehiclesWithRDRDate) {
+                            showRDRMessage = false;
+                        }
+                        this.setState({ customervehiclesData: data, showRDRMessage: showRDRMessage });
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+    }
+
 
     getAllDealers = () => {
        // let customerId = localStorage.getItem('customerId');
@@ -240,6 +306,7 @@ export default class MyServices extends React.Component {
                 });
 
     }
+
 
     populateDropDownValue = () => {
         return this.state.customervehiclesData.map((dt, i) => {
@@ -409,7 +476,30 @@ export default class MyServices extends React.Component {
                                     <h3>Request Service</h3>
                                     <div><b>Service Name:</b> {this.state.selectedServiceDetail.servicename}</div>
                                     <div><b>Service Desc:</b> {this.state.selectedServiceDetail.servicedec}</div>
-                            <div><b>Select Dealer:</b>
+                                
+                                    <div><b>Select VIN:</b><Select
+                                        label="Select VIN"
+                                        id="selectVIN"
+                                        value={this.state.selectedVIN}
+                                        onChange={this.handleChangeForVINSelect}
+                                        style={{ fontSize: '14px', width: '400px' }}
+                                    >
+
+                                        <MenuItem
+                                            key={-1}
+                                            value={-1}
+
+                                            style={{ background: '#1976d2', color: 'white' }}
+                                        >
+                                            Select VIN
+                                </MenuItem>
+
+                                        {this.populateDropDownValue()}
+
+
+                                    </Select>
+                                    </div>
+                                <div><b>Select Dealer:</b>
                                 <Select
                                     label="Select Dealer"
                                     id="selectDealer"
