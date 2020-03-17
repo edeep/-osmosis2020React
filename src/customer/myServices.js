@@ -11,6 +11,7 @@ import { URL } from '../sharedComponents/constants';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
+import moment from 'moment';
 
 export default class MyServices extends React.Component {
 
@@ -43,6 +44,54 @@ export default class MyServices extends React.Component {
 
     onChangeCustomerComplaints = (event)=> {
         this.setState({ customerComplaintsForService:event.target.value});
+    }
+
+    requestService = () => {
+
+
+       // let enquiry_created_date = moment().format('DD/MM/YYYY');;
+
+        let complaints = this.state.customerComplaintsForService;
+
+        let customerId = localStorage.getItem('customerId');
+        let dealerId = this.state.selectDealerId;
+        let serviceId = this.state.selectedServiceDetail.serviceId;
+
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            }
+
+        };
+
+        let url = URL + 'customer/requestService?customerId=' + customerId +
+            '&serviceId=' + serviceId + '&vin=-1'+
+            '&dealerId=' + dealerId + '&complaints=' + complaints;
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        //this.getAllMyServices();
+                        this.handleChange('panel1');
+                       
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
     }
 
     getAllMyServices = () => {
@@ -402,7 +451,8 @@ export default class MyServices extends React.Component {
                             </div>
                             &nbsp;
                             <div>
-                                <Button variant="contained"  color="primary"
+                                        <Button variant="contained" color="primary"
+                                            onClick={this.requestService}
                                     >
                                     Initate Service
                             </Button>
