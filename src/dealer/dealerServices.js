@@ -44,11 +44,11 @@ export default class DealerServices extends React.Component {
         //Wrong URL Needs to change
         //let dealerId = localStorage.getItem('dealerId');
         //dealerId = 1;
-        let customerId = localStorage.getItem('customerId');
-
+        let dealerId = localStorage.getItem('dealerId');
+        dealerId = 1;
         //http://localhost:7081/owner-site/manufacturer/getAllServices
        // let url = URL + 'dealer/searchAllCustomers/' + dealerId;
-        let url = URL + 'customer/viewCustomerServices?customerId=' + customerId +
+        let url = URL + 'customer/viewDealerServices?dealerId=' + dealerId +
             '&subscriptionId=-1';
 
         return fetch(url)

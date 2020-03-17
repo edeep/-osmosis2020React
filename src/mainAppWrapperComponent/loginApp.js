@@ -22,15 +22,20 @@ export default class LoginComponent extends React.Component {
          if (response.profileObj.email === 'osmosis2020manu@gmail.com')
          {
              role = 'manu';
+             localStorage.setItem('manuId', 1);
          } else if (response.profileObj.email === 'osmosis2020dealer@gmail.com') {
              role = 'dealer';
+             localStorage.setItem('dealerId', 1);
          } else if (response.profileObj.email === 'osmosis2020cust01@gmail.com') {
              role = 'cust';
              localStorage.setItem('customerId', 1);
          } else if (response.profileObj.email === 'osmosis2020cust02@gmail.com') {
              role = 'cust';
              localStorage.setItem('customerId', 2);
-         }      
+         } else {
+             role = 'cust';
+             localStorage.setItem('customerId', 3);
+         }    
          this.props.isAuthorized(true, role);
     }
 
