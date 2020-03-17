@@ -7,13 +7,14 @@ import BuySubscriptions from './buySubscriptions';
 import MySubscriptions from './mySubscriptions';
 import MyServices from './myServices';
 import MyEnquiry from './myEnquiry';
+import MyFeedback from './myFeedback';
 
 export default class CustomerLandingPage extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            value: 0,
+            value: 5,
             detailButtonClicked:'NA'
         }
     }
@@ -38,7 +39,9 @@ export default class CustomerLandingPage extends React.Component {
             case 3:
                 return <MyServices />
             case 4:
-                return <MyEnquiry/>
+                return <MyEnquiry />
+            case 5:
+                return <MyFeedback />
             default:
                 return <MyVehicles />
         }
@@ -69,10 +72,10 @@ export default class CustomerLandingPage extends React.Component {
                         
                     />
                    
-                    <Tab  label="My Enquiry"
+                    <Tab  label="My Enquiry/Requests"
 
                     />
-                    <Tab  label="My Feedback"
+                    <Tab  label="My Feedback/Benefits"
 
                     />
                 </Tabs>

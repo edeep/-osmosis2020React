@@ -256,7 +256,7 @@ export default class MyEnquiry extends React.Component {
                         aria-controls="panel1bh-content"
                         id="panel1bh-header"
                     >
-                        <Typography>My Enquiry </Typography>
+                        <Typography>My Enquiry/Requests </Typography>
                       
 
                     </ExpansionPanelSummary>
@@ -266,17 +266,17 @@ export default class MyEnquiry extends React.Component {
                                
                                 this.setState({ expanded: 'panel2',  detailButtonclicked: 'requestService' })
                             }}>
-                           New Enquiry
+                           New Enquiry/Requests
                             </Button>
                         <MaterialTable
                             style={{ width: '100%' }}
-                            title="My Enquiry"
+                            title="My Enquiry/Requests"
                             columns={[
-                                { title: 'Enquired To', render: this.displayEnquirerName },
-                                { title: 'Enquiry Date', field: 'enquiryCreatedDate' },
-                                { title: 'Enquiry Question', field: 'enquiryQuestion' },
-                                { title: 'Enquiry Resolved Date', field: 'enquiryResolvedDate' },
-                                { title: 'Enquiry Answer', field: 'enquiryAnswer' },
+                                { title: 'To', render: this.displayEnquirerName },
+                                { title: 'Created Date', field: 'enquiryCreatedDate' },
+                                { title: 'Question/Request', field: 'enquiryQuestion' },
+                                { title: 'Resolved Date', field: 'enquiryResolvedDate' },
+                                { title: 'Answer/Resolution', field: 'enquiryAnswer' },
                              
                             
                                 { title: 'History', field: 'enquiryId', render: this.displayTransferButton },
@@ -306,7 +306,7 @@ export default class MyEnquiry extends React.Component {
                         aria-controls="panel2bh-content"
                         id="panel2bh-header"
                     >
-                        <Typography >Enquiry Details</Typography>
+                        <Typography >Enquiry/Requests Details</Typography>
 
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'block' }}>
@@ -316,7 +316,7 @@ export default class MyEnquiry extends React.Component {
                             {this.state.detailButtonclicked === 'requestService' ?
                                 <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
                                     <h3>Enquire</h3>
-                                    <p> Enquiry are by Default sent to manufacturer. Select Dealer below
+                                    <p> Enquiry/Requests are by Default sent to manufacturer. Select Dealer below
                                 if you need to contact Dealer</p>        
                             <div><b>Select Dealer:</b>
                                 <Select
@@ -344,7 +344,7 @@ export default class MyEnquiry extends React.Component {
                             <TextField
                              
                                     id="standard-error-helper-text"
-                                    label="Add your Enquiry"
+                                    label="Add your Enquiry/Requests"
                                     onChange={this.onChangeEnquiryQuestion}
                                     value={this.state.enquiryQuestion}
                                     multiline
@@ -356,14 +356,14 @@ export default class MyEnquiry extends React.Component {
                             <div>
                                         <Button variant="contained" color="primary" onClick={this.sendEnquiry}
                                     >
-                                    Send Enquiry
+                                    Send Enquiry/Requests
                             </Button>
                                 </div>
                             </div> : <div></div>}
                             
                             {this.state.detailButtonclicked === 'serviceHistory' ?
                                 <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
-                                    <h3>Enquiry History</h3>
+                                    <h3>Enquiry/Requests History</h3>
                                   
                                     <div><b>Enquired On:</b> {this.state.selectedServiceDetail.enquiryCreatedDate }</div>
                                   
@@ -371,7 +371,7 @@ export default class MyEnquiry extends React.Component {
                                     
                                 
                                     <div>
-                                        <b>Customer Enquiry Details:</b>
+                                        <b>Customer Enquiry/Requests Details:</b>
                                         <TextField
 
                                             id="standard-error-helper-text"
@@ -386,7 +386,7 @@ export default class MyEnquiry extends React.Component {
                                     </div>
                                     <br></br>
                                     <div>
-                                        <span><b>Enquiry Comments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></span>
+                                        <span><b>Enquiry/Requests Comments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></span>
                                         <TextField
 
                                             id="standard-error-helper-text"
