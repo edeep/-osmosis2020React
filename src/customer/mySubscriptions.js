@@ -148,14 +148,27 @@ export default class MySubscriptions extends React.Component {
 
     displayCancelButton = (param) => {
         console.log(param);
+
+        let startDate = moment(param.subscriptionStartDate);
+        let currentDate = moment();
+        let diffInDays = currentDate.diff(startDate, 'days');
+        console.log('Diff in days', diffInDays);
+        let canCancel = false;
+        if (diffInDays < 0) {
+            canCancel = true;
+        } else if (diffInDays >= 0 && diffInDays < 8) {
+            canCancel = true;
+        } 
+
         return (
+            canCancel?
             <Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
                     this.setState({ expanded: 'panel2', selectedSubDetail: param, detailButtonClicked: 'cancel' });
                 }}>
                 Cancel
-            </Button>);
+            </Button>:'');
 
     }
 
@@ -353,6 +366,8 @@ export default class MySubscriptions extends React.Component {
                             {this.state.detailButtonClicked === 'transfer' ?
                                 <div style={{ borderStyle: 'solid', borderWidth: '0.5px' }}>
                                     <h3>Transfer Subscription</h3>
+                                    <div><b>Note:</b> For transfer to another customer, please raise a request</div>
+                                    <br></br>
                                     <div><b>Service Name:</b> {this.state.selectedSubDetail.subscriptionName}</div>
                                     <div><b>Service Desc:</b> {this.state.selectedSubDetail.subscriptionDesc}</div>
                                     <div><b>Assigned VIN:</b> {this.state.selectedSubDetail.vin}</div>

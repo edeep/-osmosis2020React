@@ -11,7 +11,7 @@ import { URL } from '../sharedComponents/constants';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
-import moment from 'moment';
+
 
 export default class MyServices extends React.Component {
 
@@ -30,7 +30,10 @@ export default class MyServices extends React.Component {
             dealerListData: [],
             serviceStationListData: [],
             selectDealerId: '-1',
-            selectedServiceStationId: '-1'
+            selectedServiceStationId: '-1',
+	     serviceRepairsCost:'',
+            serviceRepairsDesc: '',
+            servicecomplaintAnalysis: ''
 
 
         }
@@ -99,7 +102,7 @@ export default class MyServices extends React.Component {
                     console.log('Came to Fetch Result ');
                     response.json().then(data => {
                         console.log('fetched data', data);
-                        //this.getAllMyServices();
+                        this.getAllMyServices();
                         this.handleChange('panel1');
                        
                     });
@@ -375,13 +378,16 @@ export default class MyServices extends React.Component {
     displayDetailButton = (param) => {
         console.log(param);
         return (
-            <Button variant="contained" data-sub={param} color="primary"
-                onClick={() => {
-                    console.log('onClick id is ', param.subscriptionId);
-                    this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked:'requestService' })
-                }}>
-                Request Service
-                            </Button>);
+            
+            param.serviceRequestedDate && param.serviceRequestedDate !== 'null' ?
+                '' : <Button variant="contained" data-sub={param} color="primary"
+                    onClick={() => {
+                        console.log('onClick id is ', param.subscriptionId);
+                        this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked: 'requestService' })
+                    }}>
+                    Request Service
+                            </Button>
+            );
 
     }
 
@@ -395,7 +401,10 @@ export default class MyServices extends React.Component {
             <Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
-                    this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked: 'serviceHistory' })
+                    this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked: 'serviceHistory',
+		    serviceRepairsCost: param.serviceRepairsCost,
+                        serviceRepairsDesc: param.serviceRepairsDesc,
+                        servicecomplaintAnalysis: param.servicecomplaintAnalysis })
                 }}>
                 View History
                             </Button>);
@@ -405,11 +414,19 @@ export default class MyServices extends React.Component {
 
     displayStatus = (param) => {
         console.log(param);
+        let status = "Not Started";
+        if (param.serviceCompletedDate && param.serviceCompletedDate !== 'null') {
+            status = "Completed"
+        } else if (param.serviceStartedDate && param.serviceStartedDate !== 'null') {
+            status = "In-Progress"
+        } else if (param.serviceRequestedDate && param.serviceRequestedDate !== 'null') {
+            status = "Requested";
+        }
         return (
-           <div>
-                Status
+            <div>
+                {status}
             </div>
-                          );
+        );
 
     }
 
@@ -557,8 +574,10 @@ export default class MyServices extends React.Component {
                                     <div><b>Service Desc:</b> {this.state.selectedServiceDetail.servicedec}</div>
                                     <div><b>Dealer Name:</b> {this.state.selectedServiceDetail.servicename}</div>
                                     <div><b>Service Station Name:</b> {this.state.selectedServiceDetail.servicedec}</div>
-                                    <div><b>Service Start Date:</b> </div>
-                                    <div><b>Service Completed Date:</b> </div>
+                                    <div><b>VIN:</b>{this.state.selectedServiceDetail.vin}</div>
+                                    <div><b>Service Requested Date:</b>{this.state.selectedServiceDetail.serviceRequestedDate} </div>
+                                    <div><b>Service Start Date:</b> {this.state.selectedServiceDetail.serviceStartedDate}</div>
+                                    <div><b>Service Completed Date:</b> {this.state.selectedServiceDetail.serviceCompletedDate}</div>
                                 
                                     <div>
                                         <b>Customer Service Complaints:</b>
@@ -567,7 +586,7 @@ export default class MyServices extends React.Component {
                                             id="standard-error-helper-text"
                                             variant="filled"
                                             disabled 
-                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                            value={this.state.selectedServiceDetail.serviceCustomerComplaints}
                                             multiline
                                             rows="6"
                                             style={{ width: '500px' }}
@@ -582,7 +601,7 @@ export default class MyServices extends React.Component {
                                             id="standard-error-helper-text"
                                             variant="filled"
                                             disabled
-                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                            value={this.state.selectedServiceDetail.servicecomplaintAnalysis}
                                             multiline
                                             rows="6"
                                             style={{ width: '500px' }}
@@ -597,14 +616,14 @@ export default class MyServices extends React.Component {
                                             id="standard-error-helper-text"
                                             variant="filled"
                                             disabled
-                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                            value={this.state.selectedServiceDetail.serviceRepairsDesc}
                                             multiline
                                             rows="6"
                                             style={{ width: '500px' }}
 
                                         />
                                     </div>
-                                    <div><b>Total Service Cost:</b> </div>
+                                    <div><b>Total Service Cost:</b> {this.state.selectedServiceDetail.serviceRepairsCost}</div>
                             
                                 </div> :
                                 <div></div>

@@ -11,7 +11,7 @@ import { URL } from '../sharedComponents/constants';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import TextField from '@material-ui/core/TextField';
-import { indigo } from '@material-ui/core/colors';
+
 
 export default class DealerServices extends React.Component {
 
@@ -128,14 +128,19 @@ export default class DealerServices extends React.Component {
 
     displayStartService = (param) => {
         console.log(param);
+        let showButton = true;
+        if(param.serviceStartedDate && param.serviceStartedDate !== 'null') {
+            showButton = false;
+        }
         return (
-            <Button variant="contained" data-sub={param} color="primary"
+            showButton=== true ?
+                <div><Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
                     this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked:'startService' })
-                }}>
-                Start Service
-                            </Button>);
+                    }}>Start Service</Button ></div>: ''
+                            
+                    );
 
     }
 
@@ -157,7 +162,7 @@ export default class DealerServices extends React.Component {
                         servicecomplaintAnalysis: param.servicecomplaintAnalysis
                     })
                 }}>
-                Track/Update Service
+                Track Service
                             </Button>);
 
     }
@@ -200,7 +205,7 @@ export default class DealerServices extends React.Component {
                     console.log('Came to Fetch Result ');
                     response.json().then(data => {
                         console.log('fetched data', data);
-                        //this.getAllMyServices();
+                        this.getAllCustomerServices();
                         this.handleChange('panel1');
 
                     });
@@ -238,7 +243,7 @@ export default class DealerServices extends React.Component {
                     console.log('Came to Fetch Result ');
                     response.json().then(data => {
                         console.log('fetched data', data);
-                        //this.getAllMyServices();
+                        this.getAllCustomerServices();
                         this.handleChange('panel1');
 
                     });
@@ -431,12 +436,13 @@ export default class DealerServices extends React.Component {
                                         
                                         
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        
-                                        <Button variant="contained" color="primary"
-                                            onClick={this.completeService}
-                                        >
-                                            Complete Service
-                                         </Button>
+                                         
+                                        {this.state.selectedServiceDetail.serviceCompletedDate && this.state.selectedServiceDetail.serviceCompletedDate !== 'null' ?
+                                            <Button variant="contained" color="primary"
+                                                onClick={this.completeService}
+                                            >
+                                                Complete Service
+                                         </Button> : ''}
                                     </div>
                                 </div> :
                                 <div></div>

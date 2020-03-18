@@ -3,7 +3,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 import DealerServices from './dealerServices';
-import DealerSubscription from './dealerSubscriptions';
+//import DealerSubscription from './dealerSubscriptions';
 import DealerEnquiry from './dealerEnquiry';
 
 export default class DealerLandingPage extends React.Component {
@@ -20,8 +20,6 @@ export default class DealerLandingPage extends React.Component {
             case 0:
                 return <DealerServices />
             case 1:
-                return <DealerSubscription />
-            case 2:
                 return <DealerEnquiry />
             default:
                 return <DealerServices />
@@ -51,9 +49,6 @@ export default class DealerLandingPage extends React.Component {
 
                     />
 
-                    <Tab label="Subscriptions"
-
-                    />
                     <Tab label="Enquiry"
 
                     />
