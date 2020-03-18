@@ -14,7 +14,7 @@ export default class CustomerLandingPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 5,
+            value: 0,
             detailButtonClicked:'NA'
         }
     }
