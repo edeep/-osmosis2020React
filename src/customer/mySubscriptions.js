@@ -52,6 +52,11 @@ export default class MySubscriptions extends React.Component {
             .then(
                 response => {
                     console.log('Came to Fetch Result ');
+
+                    if (response.status !== 200) {
+                        this.setState({ subscriptionData: [] });
+                        return;
+                    }
                     response.json().then(data => {
                         console.log('fetched data', data);
                         this.setState({ subscriptionData: data });

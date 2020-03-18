@@ -425,8 +425,10 @@ export default class CreateSubscription extends React.Component {
             <Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
-                    this.getServicesForSelectedSubscription(param);
-                    this.setState({ expanded:'panel2', selectedSubDetail:param})
+                    
+                    this.setState({ expanded: 'panel2', selectedSubDetail: param }, () => {
+                        this.getServicesForSelectedSubscription(param);
+                    })
                 }}>
             Detail
                             </Button>);
