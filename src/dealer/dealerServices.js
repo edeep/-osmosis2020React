@@ -11,6 +11,7 @@ import { URL } from '../sharedComponents/constants';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import TextField from '@material-ui/core/TextField';
+import { indigo } from '@material-ui/core/colors';
 
 export default class DealerServices extends React.Component {
 
@@ -25,7 +26,10 @@ export default class DealerServices extends React.Component {
             customervehiclesData: [],
             selectedVIN: '-1',
             customerComplaintsForService: '',
-            detailButtonclicked:'NA'
+            detailButtonclicked: 'NA',
+            serviceRepairsCost:'',
+            serviceRepairsDesc: '',
+            servicecomplaintAnalysis: ''
 
 
         }
@@ -37,6 +41,15 @@ export default class DealerServices extends React.Component {
 
     onChangeCustomerComplaints = (event)=> {
         this.setState({ customerComplaintsForService:event.target.value});
+    }
+    onChangeServiceRepairsCost = (event) => {
+        this.setState({ serviceRepairsCost: event.target.value });
+    }
+    onChangeServiceRepairsDesc = (event) => {
+        this.setState({ serviceRepairsDesc: event.target.value });
+    }
+    onChangeServicecomplaintAnalysis = (event) => {
+        this.setState({ servicecomplaintAnalysis: event.target.value });
     }
 
     getAllCustomerServices = () => {
@@ -87,41 +100,6 @@ export default class DealerServices extends React.Component {
 
 
 
-    getMyVehicles = () => {
-
-        let customerId = localStorage.getItem('customerId');
-        //http://localhost:7081/owner-site/customer/getMyVehicles?customerId=1
-
-        let url = URL + 'customer/getMyVehicles?customerId=' + customerId;
-
-        return fetch(url)
-            .then(response => {
-                if (!response.ok) {
-
-                    throw Error(response.status);
-                }
-                return response;
-            })
-            .then(
-                response => {
-                    console.log('Came to Fetch Result ');
-
-                    if (response.status !== 200) {
-                        this.setState({ customervehiclesData: [] });
-                        return;
-                    }
-
-                    response.json().then(data => {
-                        console.log('fetched data', data);
-                        this.setState({ customervehiclesData: data });
-                    });
-                })
-            .catch(
-                error => {
-                    console.log('Error ', error);
-                });
-
-    }
 
     populateDropDownValue = () => {
 
@@ -171,19 +149,118 @@ export default class DealerServices extends React.Component {
             <Button variant="contained" data-sub={param} color="primary"
                 onClick={() => {
                     console.log('onClick id is ', param.subscriptionId);
-                    this.setState({ expanded: 'panel2', selectedServiceDetail: param, detailButtonclicked: 'serviceHistory' })
+                    this.setState({
+                        expanded: 'panel2', selectedServiceDetail: param,
+                        detailButtonclicked: 'serviceHistory',
+                        serviceRepairsCost: param.serviceRepairsCost,
+                        serviceRepairsDesc: param.serviceRepairsDesc,
+                        servicecomplaintAnalysis: param.servicecomplaintAnalysis
+                    })
                 }}>
                 Track/Update Service
                             </Button>);
 
     }
     
+    completeService = () => {
+
+
+        // let enquiry_created_date = moment().format('DD/MM/YYYY');;
+
+        let analysis = this.state.servicecomplaintAnalysis;
+
+       
+        let repairs = this.state.serviceRepairsDesc;
+        let serviceId = this.state.selectedServiceDetail.serviceId;
+        let cost = this.state.serviceRepairsCost;
+
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            }
+
+        };
+
+        let url = URL + 'customer/completeService?'+
+            '&serviceId=' + serviceId +
+            '&analysis=' + analysis + '&repairs=' + repairs +
+            '&cost=' + cost;
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        //this.getAllMyServices();
+                        this.handleChange('panel1');
+
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+    }
+
+    startService = () => {
+        let serviceId = this.state.selectedServiceDetail.serviceId;
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            }
+
+        };
+
+        let url = URL + 'customer/startService?' +
+            '&serviceId=' + serviceId;
+
+        return fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+
+                    throw Error(response.status);
+                }
+                return response;
+            })
+            .then(
+                response => {
+                    console.log('Came to Fetch Result ');
+                    response.json().then(data => {
+                        console.log('fetched data', data);
+                        //this.getAllMyServices();
+                        this.handleChange('panel1');
+
+                    });
+                })
+            .catch(
+                error => {
+                    console.log('Error ', error);
+                });
+
+    }
 
     displayStatus = (param) => {
         console.log(param);
+        let status = "Requested";
+        if (param.serviceCompletedDate && param.serviceCompletedDate!=='null') {
+            status = "Completed"
+        } else if (param.serviceStartedDate && param.serviceStartedDate !== 'null') {
+            status = "In-Progress"
+        }
         return (
            <div>
-                Status
+                {status}
             </div>
                           );
 
@@ -200,7 +277,7 @@ export default class DealerServices extends React.Component {
                         aria-controls="panel1bh-content"
                         id="panel1bh-header"
                     >
-                        <Typography>Dealer Services -- Integration Pending </Typography>
+                        <Typography>Dealer Services </Typography>
 
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'block' }}>
@@ -252,11 +329,7 @@ export default class DealerServices extends React.Component {
                                     <h3>Start Service</h3>
                                     <div><b>Service Name:</b> {this.state.selectedServiceDetail.servicename}</div>
                                     <div><b>Service Desc:</b> {this.state.selectedServiceDetail.servicedec}</div>
-                            <div><b>Dealer Name:</b>
-                                
-                            </div>
-                                    <div><b>Service Station Name:</b></div>
-                                    <div><b>Customer Name:</b></div>
+                           
                                     
                                     <div>
                                         <b>Customer Service Complaints:</b>
@@ -264,8 +337,8 @@ export default class DealerServices extends React.Component {
                              
                                     id="standard-error-helper-text"
                                    
-                                    onChange={this.onChangeCustomerComplaints}
-                                    value={this.state.customerComplaintsForService}
+                                   
+                                            value={this.state.selectedServiceDetail.serviceCustomerComplaints}
                                             multiline
                                             disabled
                                     rows="6"
@@ -276,7 +349,7 @@ export default class DealerServices extends React.Component {
                             </div>
                             &nbsp;
                                     <div>
-                                <Button variant="contained"  color="primary"
+                                        <Button variant="contained" color="primary" onClick={this.startService}
                                     >
                                     Start Service
                             </Button>
@@ -291,9 +364,10 @@ export default class DealerServices extends React.Component {
                                     <div><b>Service Desc:</b> {this.state.selectedServiceDetail.servicedec}</div>
                                     <div><b>Dealer Name:</b> {this.state.selectedServiceDetail.servicename}</div>
                                     <div><b>Service Station Name:</b> {this.state.selectedServiceDetail.servicedec}</div>
-                                    <div><b>Customer Name:</b></div>
-                                    <div><b>Service Start Date:</b> </div>
-                                    <div><b>Service Completed Date:</b> </div>
+                                    <div><b>VIN:</b>{this.state.selectedServiceDetail.vin}</div>
+                                    <div><b>Service Requested Date:</b>{this.state.selectedServiceDetail.serviceRequestedDate} </div>
+                                    <div><b>Service Start Date:</b> {this.state.selectedServiceDetail.serviceStartedDate}</div>
+                                    <div><b>Service Completed Date:</b> {this.state.selectedServiceDetail.serviceCompletedDate}</div>
                                 
                                     <div>
                                         <b>Customer Service Complaints:</b>
@@ -302,7 +376,7 @@ export default class DealerServices extends React.Component {
                                             id="standard-error-helper-text"
                                             variant="filled"
                                             disabled 
-                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                            value={this.state.selectedServiceDetail.serviceCustomerComplaints}
                                             multiline
                                             
                                             rows="6"
@@ -317,8 +391,8 @@ export default class DealerServices extends React.Component {
 
                                             id="standard-error-helper-text"
                                           
-                                            
-                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                            onChange={this.onChangeServicecomplaintAnalysis}
+                                            value={this.state.servicecomplaintAnalysis}
                                             multiline
                                             rows="6"
                                             style={{ width: '500px' }}
@@ -332,8 +406,8 @@ export default class DealerServices extends React.Component {
 
                                             id="standard-error-helper-text"
                                           
-                                           
-                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                            onChange={this.onChangeServiceRepairsDesc}
+                                            value={this.state.serviceRepairsDesc}
                                             multiline
                                             rows="6"
                                             style={{ width: '500px' }}
@@ -346,22 +420,20 @@ export default class DealerServices extends React.Component {
 
                                             id="standard-error-helper-text"
 
-
-                                            value={this.state.selectedServiceDetail.customerComplaintsForService}
+                                            onChange={this.onChangeServiceRepairsCost}
+                                            value={this.state.serviceRepairsCost}
                                            
                                             style={{ width: '100px' }}
 
                                         /></div>
                                     <br></br>
                                     <div>
-                                        <Button variant="contained" color="primary"
-                                        >
-                                            Update Service
-                                         </Button>
+                                        
                                         
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         
                                         <Button variant="contained" color="primary"
+                                            onClick={this.completeService}
                                         >
                                             Complete Service
                                          </Button>
